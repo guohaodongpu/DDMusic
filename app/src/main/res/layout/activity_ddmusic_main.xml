@@ -173,42 +173,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="自建歌单"/>
-        <Button
+
+
+        <ListView
+            android:id="@+id/list_item"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:text="陈奕迅"
-            android:gravity="left|center"
-            android:layout_margin="5dp"/>
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:text="无声不编程"
-            android:gravity="left|center"
-            android:layout_margin="5dp"/>
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:text="无声不编程"
-            android:gravity="left|center"
-            android:layout_margin="5dp"/>
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:text="无声不编程"
-            android:gravity="left|center"
-            android:layout_margin="5dp"/>
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:text="无声不编程"
-            android:gravity="left|center"
-            android:layout_margin="5dp"/>
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:text="无声不编程"
-            android:gravity="left|center"
-            android:layout_margin="5dp"/>
+            android:layout_height="wrap_content">
+
+
+        </ListView>
+
 
 
     </LinearLayout>

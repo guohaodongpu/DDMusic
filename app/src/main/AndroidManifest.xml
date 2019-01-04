@@ -19,7 +19,8 @@
         <activity
             android:name=".ListenMusicShowActivity"
             android:label="@string/title_activity_listen_music_show"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".entity.AllMusicActivity"></activity>
     </application>
 
 </manifest>

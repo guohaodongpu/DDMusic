@@ -1,12 +1,23 @@
 package com.ghd.ts.ddmusic;
-
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import com.ghd.ts.ddmusic.Adapter.MusicListAdapter;
+import com.ghd.ts.ddmusic.entity.MusicList;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class DDMusicMainActivity extends AppCompatActivity {
+
+
+    private List<MusicList> musicListList=new ArrayList<MusicList>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,6 +27,11 @@ public class DDMusicMainActivity extends AppCompatActivity {
         if(actionBar!=null){
             actionBar.hide();
         }
+        initMusicList();
+        MusicListAdapter adapter=new MusicListAdapter(
+          DDMusicMainActivity.this,R.layout.music_list,musicListList);
+        ListView listView=(ListView) findViewById(R.id.list_item);
+        listView.setAdapter(adapter);
 
     }
 
@@ -26,5 +42,35 @@ public class DDMusicMainActivity extends AppCompatActivity {
         Intent intent=new Intent(DDMusicMainActivity.this,ListenMusicShowActivity.class);
         startActivity(intent);
     }
+
+    private void initMusicList(){
+
+        for(int i=0;i<2;i++){
+            MusicList zhoujielun=new MusicList("周杰伦","这是周杰伦的专辑",R.drawable.music);
+            musicListList.add(zhoujielun);
+            MusicList zhoujielun1=new MusicList("周杰伦","这是周杰伦的专辑",R.drawable.music);
+            musicListList.add(zhoujielun1);
+            MusicList zhoujielun2=new MusicList("周杰伦","这是周杰伦的专辑",R.drawable.music);
+            musicListList.add(zhoujielun2);
+            MusicList zhoujielun3=new MusicList("周杰伦","这是周杰伦的专辑",R.drawable.music);
+            musicListList.add(zhoujielun3);
+            MusicList zhoujielun4=new MusicList("周杰伦","这是周杰伦的专辑",R.drawable.music);
+            musicListList.add(zhoujielun4);
+            MusicList zhoujielun5=new MusicList("周杰伦","这是周杰伦的专辑",R.drawable.music);
+            musicListList.add(zhoujielun5);
+            MusicList zhoujielun6=new MusicList("周杰伦","这是周杰伦的专辑",R.drawable.music);
+            musicListList.add(zhoujielun6);
+            MusicList zhoujielun7=new MusicList("周杰伦","这是周杰伦的专辑",R.drawable.music);
+            musicListList.add(zhoujielun7);
+            MusicList zhoujielun8=new MusicList("周杰伦","这是周杰伦的专辑",R.drawable.music);
+            musicListList.add(zhoujielun8);
+            MusicList zhoujielun9=new MusicList("周杰伦","这是周杰伦的专辑",R.drawable.music);
+            musicListList.add(zhoujielun9);
+            MusicList zhoujielun10=new MusicList("周杰伦","这是周杰伦的专辑",R.drawable.music);
+            musicListList.add(zhoujielun10);
+        }
+
+    }
+
 
 }
