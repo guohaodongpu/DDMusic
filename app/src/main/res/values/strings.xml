@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">DDMusic</string>
+    <string name="title_activity_listen_music_show">ListenMusicShowActivity</string>
 
 </resources>

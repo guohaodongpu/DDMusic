@@ -9,48 +9,73 @@
 
     <LinearLayout
         android:id="@+id/top_linearlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
+
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/caidan"
+            android:background="@android:color/transparent"
+            android:scaleType="centerCrop"
+
+            />
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/button_0_0"
-            android:layout_width="30dp"
-            android:layout_height="wrap_content"
-            android:text="="
-            android:textSize="15sp" />
-
+        android:orientation="horizontal"
+        >
         <Button
             android:id="@+id/button_0_1"
-            android:layout_width="wrap_content"
+            android:layout_width="75dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:gravity="center"
+            android:textStyle="bold"
             android:text="我的"
-            android:textSize="15sp" />
+            android:textSize="25sp"
+            android:padding="0dp"
+            android:layout_margin="10dp"/>
+
         <Button
             android:id="@+id/button_0_2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:text="音乐库"
-            android:layout_gravity="center"
-            android:textSize="15sp"/>
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:padding="0dp"
+            android:layout_margin="10dp"/>
 
         <Button
             android:id="@+id/button_0_3"
-            android:layout_width="wrap_content"
+            android:layout_width="75dp"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:gravity="center"
             android:text="发现"
             android:layout_gravity="center"
-            android:textSize="15sp"/>
-        <Button
-            android:id="@+id/button_0_4"
+            android:textSize="25sp"
+            android:padding="0dp"
+            android:layout_margin="10dp"/>
+
+    </LinearLayout>
+
+        <ImageButton
             android:layout_width="30dp"
-            android:layout_height="wrap_content"
-            android:text="+"
-            android:textSize="15sp"/>
+            android:layout_height="30dp"
+            android:src="@drawable/jia"
+            android:background="@android:color/transparent"
+            android:scaleType="centerCrop"
+            />
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/center_linearlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -61,27 +86,37 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_marginTop="10sp">
-            <Button
+            <ImageButton
                 android:id="@+id/center_button_0_0"
-                android:layout_width="wrap_content"
-                android:layout_height="70sp"
+                android:layout_width="90sp"
+                android:layout_height="90sp"
+                android:src="@drawable/music"
+                android:scaleType="centerCrop"
                 android:text="全部音乐"
+                android:textSize="15sp"
                 android:layout_gravity="center"
-                android:textSize="15sp"/>
+                android:layout_margin="10dp"
+                />
 
-            <Button
+            <ImageButton
                 android:id="@+id/center_button_0_1"
-                android:layout_width="wrap_content"
-                android:layout_height="70sp"
+                android:layout_width="90sp"
+                android:layout_height="90sp"
+                android:src="@drawable/download"
+                android:scaleType="centerCrop"
                 android:text="下载音乐"
                 android:layout_gravity="center"
-                android:textSize="15sp"/>
-            <Button
+                android:textSize="15sp"
+                android:layout_margin="10dp"/>
+            <ImageButton
                 android:id="@+id/center_button_0_2"
-                android:layout_width="wrap_content"
-                android:layout_height="70sp"
+                android:layout_width="90sp"
+                android:layout_height="90sp"
+                android:src="@drawable/history"
+                android:scaleType="centerCrop"
                 android:text="最近播放"
-                android:textSize="15sp"/>
+                android:textSize="15sp"
+                android:layout_margin="10dp"/>
 
         </LinearLayout>
         <LinearLayout
@@ -89,27 +124,36 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_marginTop="10sp">
-            <Button
+            <ImageButton
                 android:id="@+id/center_button_1_0"
-                android:layout_width="wrap_content"
-                android:layout_height="70sp"
+                android:layout_width="90sp"
+                android:layout_height="90sp"
+                android:src="@drawable/like"
+                android:scaleType="centerCrop"
                 android:text="我喜欢的"
                 android:layout_gravity="center"
-                android:textSize="15sp"/>
+                android:textSize="15sp"
+                android:layout_margin="10dp"/>
 
-            <Button
+            <ImageButton
                 android:id="@+id/center_button_1_1"
-                android:layout_width="wrap_content"
-                android:layout_height="70sp"
+                android:layout_width="90sp"
+                android:layout_height="90sp"
+                android:src="@drawable/buy"
+                android:scaleType="centerCrop"
                 android:text="已购音乐"
                 android:layout_gravity="center"
-                android:textSize="15sp"/>
-            <Button
+                android:textSize="15sp"
+                android:layout_margin="10dp"/>
+            <ImageButton
                 android:id="@+id/center_button_1_2"
-                android:layout_width="wrap_content"
-                android:layout_height="70sp"
+                android:layout_width="90sp"
+                android:layout_height="90sp"
+                android:src="@drawable/run"
+                android:scaleType="centerCrop"
                 android:text="跑步电台"
-                android:textSize="15sp"/>
+                android:textSize="15sp"
+                android:layout_margin="10dp"/>
 
         </LinearLayout>
 
@@ -120,35 +164,101 @@
 
 
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#f0f0f0"
-        android:layout_alignParentBottom="true"
-        android:gravity="right"
-        >
-        <ImageView
+        android:layout_below="@+id/center_linearlayout"
+        android:orientation="vertical">
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            />
+            android:text="自建歌单"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:text="陈奕迅"
+            android:gravity="left|center"
+            android:layout_margin="5dp"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:text="无声不编程"
+            android:gravity="left|center"
+            android:layout_margin="5dp"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:text="无声不编程"
+            android:gravity="left|center"
+            android:layout_margin="5dp"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:text="无声不编程"
+            android:gravity="left|center"
+            android:layout_margin="5dp"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:text="无声不编程"
+            android:gravity="left|center"
+            android:layout_margin="5dp"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:text="无声不编程"
+            android:gravity="left|center"
+            android:layout_margin="5dp"/>
+
+
+    </LinearLayout>
+
+
+
+
+
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#f0f0f0"
+        android:layout_alignParentBottom="true"
+        android:gravity="right|center"
+        >
+        <ImageButton
+            android:id="@+id/open_music_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/music"
+            android:background="@android:color/transparent"
+            android:scaleType="centerCrop"
+            android:layout_marginRight="28dp"/>
         <TextView
             android:layout_width="200sp"
             android:layout_height="wrap_content"
             android:text="歌名：take me to your heart"/>
-        <Button
-            android:id="@+id/bottom_button_0_0"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:text="播放"
-            android:textSize="15sp"
-            />
-        <Button
-            android:id="@+id/bottom_button_0_1"
-            android:layout_width="30dp"
-            android:layout_height="wrap_content"
-            android:text="="
-            android:textSize="15sp"
+        <ImageButton
+            android:id="@+id/on-off_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/start"
+            android:background="@android:color/transparent"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:scaleType="centerCrop"
+            android:layout_marginRight="5sp"
+            android:onClick="listenMusic_show"/>
+        <ImageButton
+            android:id="@+id/songList_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/music_list"
+            android:background="@android:color/transparent"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:scaleType="centerCrop"
+            android:layout_marginRight="10dp "
             />
 
 
