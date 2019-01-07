@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="#f0f0f0"
+    android:gravity="right|center">
+
+
+        <ImageButton
+            android:id="@+id/open_music_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="28dp"
+            android:background="@android:color/transparent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/music"
+            android:onClick="backLast"
+            />
+
+        <TextView
+            android:layout_width="200sp"
+            android:layout_height="wrap_content"
+            android:text="歌名：take me to your heart" />
+
+        <ImageButton
+            android:id="@+id/on-off_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="5sp"
+            android:background="@android:color/transparent"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:onClick="listenMusic_show"
+            android:scaleType="centerCrop"
+            android:src="@drawable/start" />
+
+        <ImageButton
+            android:id="@+id/songList_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="10sp"
+            android:background="@android:color/transparent"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:scaleType="centerCrop"
+            android:src="@drawable/music_list" />
+
+
+
+</LinearLayout>

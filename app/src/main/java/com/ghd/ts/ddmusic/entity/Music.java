@@ -10,8 +10,19 @@ public class Music {
 
     private int musicLength; //歌曲长度
 
-    private int imageId; //歌曲图片
+    private String imageId; //歌曲图片
 
+    private long size;
+
+    public Music() {
+
+    }
+
+
+    public Music(String musicName, String singer) {
+        this.musicName = musicName;
+        this.singer = singer;
+    }
 
     public String getMusicName() {
         return musicName;
@@ -45,11 +56,19 @@ public class Music {
         this.musicLength = musicLength;
     }
 
-    public int getImageId() {
+    public String getImageId() {
         return imageId;
     }
 
-    public void setImageId(int imageId) {
+    public void setImageId(String imageId) {
         this.imageId = imageId;
+    }
+
+    public long getSize() {
+        return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
     }
 }
