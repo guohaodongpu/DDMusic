@@ -1,6 +1,7 @@
 package com.ghd.ts.ddmusic.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -53,8 +54,8 @@ public class MusicAdapter extends BaseAdapter {
             // 实例化对象
             holder.song = view.findViewById(R.id.music_name);
             holder.singer = view.findViewById(R.id.music_singer);
-
-
+            holder.duration = view.findViewById(R.id.music_duration);
+            //holder.position = view.findViewById(R.id.music_postion);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -69,21 +70,18 @@ public class MusicAdapter extends BaseAdapter {
         } else {
             holder.song.setText(string_song.trim());
         }
-
-        holder.singer.setText(list.get(i).getSinger().toString().trim());
+        holder.singer.setText(list.get(i).getSinger().trim());
         // 时间转换为时分秒
-        int duration = list.get(i).getMusicLength();
+        int duration = list.get(i).getDuration();
         String time = MusicUtils.formatTime(duration);
         holder.duration.setText(time);
-
         return view;
     }
-
     class ViewHolder {
         TextView song;// 歌曲名
         TextView singer;// 歌手
         TextView duration;// 时长
-
+        //TextView position;// 序号获取
     }
 
 }

@@ -3,14 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/to_down"
+        android:layout_height="match_parent"
         android:icon="@drawable/ic_to_down"
-        app:showAsAction="always"
-        android:title="返回" />
+        android:title="返回"
+        app:showAsAction="always" />
     <item
         android:id="@+id/more"
         android:icon="@drawable/ic_more"
-        app:showAsAction="always"
-        android:title="更多" />
+        android:title="更多"
+        app:showAsAction="always" />
 
 
 </menu>

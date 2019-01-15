@@ -1,18 +1,24 @@
 package com.ghd.ts.ddmusic.entity;
 
-public class Music {
+import android.widget.CursorAdapter;
 
-    private String musicName; //歌名
+import java.io.Serializable;
 
-    private String singer; //歌手
+public class Music implements Serializable {
 
-    private String path; //歌曲的地址
+    private String mMusicName; //歌名
 
-    private int musicLength; //歌曲长度
+    private String mSinger; //歌手
+
+    private String mPath; //歌曲的地址
+
+    private int mDuration; //歌曲长度
 
     private String imageId; //歌曲图片
 
     private long size;
+
+    //CursorAdapter
 
     public Music() {
 
@@ -20,40 +26,40 @@ public class Music {
 
 
     public Music(String musicName, String singer) {
-        this.musicName = musicName;
-        this.singer = singer;
+        this.mMusicName = musicName;
+        this.mSinger = singer;
     }
 
     public String getMusicName() {
-        return musicName;
+        return mMusicName;
     }
 
     public void setMusicName(String musicName) {
-        this.musicName = musicName;
+        this.mMusicName = musicName;
     }
 
     public String getSinger() {
-        return singer;
+        return mSinger;
     }
 
     public void setSinger(String singer) {
-        this.singer = singer;
+        this.mSinger = singer;
     }
 
     public String getPath() {
-        return path;
+        return mPath;
     }
 
     public void setPath(String path) {
-        this.path = path;
+        this.mPath = path;
     }
 
-    public int getMusicLength() {
-        return musicLength;
+    public int getDuration() {
+        return mDuration;
     }
 
-    public void setMusicLength(int musicLength) {
-        this.musicLength = musicLength;
+    public void setDuration(int duration) {
+        this.mDuration = duration;
     }
 
     public String getImageId() {

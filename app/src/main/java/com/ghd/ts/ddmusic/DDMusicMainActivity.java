@@ -34,10 +34,7 @@ public class DDMusicMainActivity extends AppCompatActivity {
 
     }
 
-    public void listenMusic_show(View v) {
-        Intent intent = new Intent(DDMusicMainActivity.this, ListenMusicShowActivity.class);
-        startActivity(intent);
-    }
+
     public void allMusic_show(View v) {
         Intent intent = new Intent(DDMusicMainActivity.this, AllMusicActivity.class);
         startActivity(intent);
@@ -59,14 +56,7 @@ public class DDMusicMainActivity extends AppCompatActivity {
             mMusicListList.add(zhoujielun5);
             MusicList zhoujielun6 = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
             mMusicListList.add(zhoujielun6);
-            MusicList zhoujielun7 = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
-            mMusicListList.add(zhoujielun7);
-            MusicList zhoujielun8 = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
-            mMusicListList.add(zhoujielun8);
-            MusicList zhoujielun9 = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
-            mMusicListList.add(zhoujielun9);
-            MusicList zhoujielun10 = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
-            mMusicListList.add(zhoujielun10);
+
         }
     }
 }

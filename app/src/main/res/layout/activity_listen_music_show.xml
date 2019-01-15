@@ -1,22 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            />
 
+    </android.support.design.widget.AppBarLayout>
+    <TextView
+        android:id="@+id/top_music_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="当前没有播放歌曲"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        />
     <LinearLayout
         android:id="@+id/pictures_linearlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginTop="60dp"
-        android:layout_below="@id/top_linearlayout">
+        android:paddingTop="50dp">
+
     <ImageView
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:src="@drawable/music"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,11 +60,13 @@
         <SeekBar
             android:id="@+id/seekBar"
             android:layout_width="250dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:thumb="@drawable/ic_seekbar_bt" />
         <TextView
+            android:id="@+id/music_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="03:58"
+            android:text="00:00"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginRight="2dp"
@@ -59,27 +84,31 @@
         android:layout_alignParentBottom="true">
 
         <ImageButton
+            android:id="@+id/last_music"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/last"
+            android:src="@drawable/ic_last_music"
             android:scaleType="centerCrop"
             android:background="@android:color/transparent"
             android:layout_margin="10dp"/>
         <ImageButton
+            android:id="@+id/music_list_on_off"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/start"
+            android:src="@drawable/ic_play"
             android:scaleType="centerCrop"
             android:background="@android:color/transparent"
             android:layout_margin="10dp"/>
         <ImageButton
+            android:id="@+id/next_music"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/next"
+            android:src="@drawable/ic_next_music"
             android:scaleType="centerCrop"
             android:background="@android:color/transparent"
             android:layout_margin="10dp"/>
         <ImageButton
+
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:src="@drawable/music_list"
@@ -87,7 +116,6 @@
             android:background="@android:color/transparent"
             android:layout_margin="10dp"/>
 
-
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>
