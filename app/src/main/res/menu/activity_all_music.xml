@@ -4,14 +4,19 @@
     <item
         android:id="@+id/back"
         android:icon="@drawable/ic_back"
-        app:showAsAction="always"
         android:title="返回"
-        />
-    <item
+        app:showAsAction="always" />
+  <!--  <item
         android:id="@+id/more"
         android:icon="@drawable/ic_more"
         app:showAsAction="always"
-        android:title="更多" />
+        android:title="更多" >
+    </item>-->
+    <item
+        android:id="@+id/update_music"
+        android:icon="@drawable/ic_more"
+        android:title="更新音乐库" />
+
 
 
 </menu>

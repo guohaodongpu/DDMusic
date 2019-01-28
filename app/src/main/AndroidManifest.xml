@@ -3,7 +3,6 @@
     package="com.ghd.ts.ddmusic">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -13,18 +12,32 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DDMusicMainActivity">
+        <activity
+            android:name=".ListenMusicShowActivity"
+            android:label="DDMusic"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AllMusicActivity"
+            android:label="" />
+        <activity
+            android:name=".MainActivity"
+            android:label="DDMusic"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ListenMusicShowActivity"
-            android:label="@string/title_activity_listen_music_show"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".AllMusicActivity"></activity>
+
+        <meta-data
+            android:name="com.google.android.gms.car.application"
+            android:resource="@xml/automotive_app_desc" />
+        <!--
+ Main music service, provides media browsing and media playback services to
+         consumers through MediaBrowserService and MediaSession. Consumers connect to it through
+         MediaBrowser (for browsing) and MediaController (for playback control)
+        -->
     </application>
 
 </manifest>

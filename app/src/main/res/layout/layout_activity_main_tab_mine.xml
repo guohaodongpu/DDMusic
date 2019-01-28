@@ -1,80 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".DDMusicMainActivity">
-
-    <LinearLayout
-        android:id="@+id/top_linearlayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@android:color/transparent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/caidan" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/top_mine"
-                android:layout_width="75dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                android:padding="0dp"
-                android:text="我的"
-                android:textSize="25sp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/top_music_library"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                android:padding="0dp"
-                android:text="音乐库"
-                android:textSize="25sp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/top_discover"
-                android:layout_width="75dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                android:padding="0dp"
-                android:text="发现"
-                android:textSize="25sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-        <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@android:color/transparent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/jia" />
-
-    </LinearLayout>
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/center_linearlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/top_linearlayout"
         android:orientation="vertical">
 
         <LinearLayout
@@ -85,22 +18,27 @@
 
             <ImageButton
                 android:id="@+id/center_all_music"
-                android:layout_width="90sp"
-                android:layout_height="90sp"
+                android:layout_width="70sp"
+                android:layout_height="70sp"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
+                android:background="@android:color/transparent"
+                android:onClick="allMusic"
+                android:padding="10dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/music"
                 android:text="全部音乐"
-                android:onClick="allMusic_show"
                 android:textSize="15sp" />
 
             <ImageButton
                 android:id="@+id/center_download_music"
-                android:layout_width="90sp"
-                android:layout_height="90sp"
+                android:layout_width="70sp"
+                android:layout_height="70sp"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
+                android:background="@android:color/transparent"
+                android:onClick="downloadMusic"
+                android:padding="10dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/download"
                 android:text="下载音乐"
@@ -108,9 +46,11 @@
 
             <ImageButton
                 android:id="@+id/center_recently_played"
-                android:layout_width="90sp"
-                android:layout_height="90sp"
+                android:layout_width="70sp"
+                android:layout_height="70sp"
                 android:layout_margin="10dp"
+                android:background="@android:color/transparent"
+                android:padding="10dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/history"
                 android:text="最近播放"
@@ -126,10 +66,12 @@
 
             <ImageButton
                 android:id="@+id/center_my_favorite"
-                android:layout_width="90sp"
-                android:layout_height="90sp"
+                android:layout_width="70sp"
+                android:layout_height="70sp"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
+                android:background="@android:color/transparent"
+                android:padding="10dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/like"
                 android:text="我喜欢的"
@@ -137,10 +79,12 @@
 
             <ImageButton
                 android:id="@+id/center_already_bought_music"
-                android:layout_width="90sp"
-                android:layout_height="90sp"
+                android:layout_width="70sp"
+                android:layout_height="70sp"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
+                android:background="@android:color/transparent"
+                android:padding="10dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/buy"
                 android:text="已购音乐"
@@ -148,9 +92,11 @@
 
             <ImageButton
                 android:id="@+id/center_running_radio"
-                android:layout_width="90sp"
-                android:layout_height="90sp"
+                android:layout_width="70sp"
+                android:layout_height="70sp"
                 android:layout_margin="10dp"
+                android:background="@android:color/transparent"
+                android:padding="10dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/run"
                 android:text="跑步电台"
@@ -165,7 +111,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/center_linearlayout"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -180,9 +125,4 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
-
-
-<include layout="@layout/layout_bottom_title"/>
-
-
 </LinearLayout>

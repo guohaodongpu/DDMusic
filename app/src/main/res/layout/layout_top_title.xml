@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="50dp">
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:padding="10dp">
 
     <ImageButton
         android:id="@+id/black_button"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:background="@android:color/transparent"
         android:scaleType="centerCrop"
         android:src="@drawable/back"
@@ -18,13 +22,14 @@
         android:layout_weight="1"
         android:gravity="center"
         android:layout_gravity="center"
-        android:text="本地音乐"
-        android:textSize="25dp"/>
+        android:text="@string/allmusic_title"
+        android:textSize="18dp"
+        android:textStyle="bold"/>
 
     <ImageButton
         android:id="@+id/open_music_button"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:background="@android:color/transparent"
         android:scaleType="centerCrop"
         android:src="@drawable/ddd" />
