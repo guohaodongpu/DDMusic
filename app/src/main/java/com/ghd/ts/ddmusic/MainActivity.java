@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity
         //initTabLineWidth();
 
 
-        initMusicList();
+        //initMusicList();
         View view=View.inflate(getApplicationContext(),R.layout.layout_activity_main_tab_mine, null);
         MusicListAdapter adapter = new MusicListAdapter(
                 MainActivity.this, R.layout.layout_music_list_list, mMusicListList);
@@ -225,6 +225,8 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
+
+
 
     }
 
@@ -306,25 +308,25 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void initMusicList() {
-        for (int i = 0; i < 2; i++) {
-            MusicList zhoujielun = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
-            mMusicListList.add(zhoujielun);
-            MusicList zhoujielun1 = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
-            mMusicListList.add(zhoujielun1);
-            MusicList zhoujielun2 = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
-            mMusicListList.add(zhoujielun2);
-            MusicList zhoujielun3 = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
-            mMusicListList.add(zhoujielun3);
-            MusicList zhoujielun4 = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
-            mMusicListList.add(zhoujielun4);
-            MusicList zhoujielun5 = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
-            mMusicListList.add(zhoujielun5);
-            MusicList zhoujielun6 = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
-            mMusicListList.add(zhoujielun6);
-
-        }
-    }
+//    private void initMusicList() {
+//        for (int i = 0; i < 2; i++) {
+//            MusicList zhoujielun = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
+//            mMusicListList.add(zhoujielun);
+//            MusicList zhoujielun1 = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
+//            mMusicListList.add(zhoujielun1);
+//            MusicList zhoujielun2 = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
+//            mMusicListList.add(zhoujielun2);
+//            MusicList zhoujielun3 = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
+//            mMusicListList.add(zhoujielun3);
+//            MusicList zhoujielun4 = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
+//            mMusicListList.add(zhoujielun4);
+//            MusicList zhoujielun5 = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
+//            mMusicListList.add(zhoujielun5);
+//            MusicList zhoujielun6 = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
+//            mMusicListList.add(zhoujielun6);
+//
+//        }
+//    }
 
     public void allMusic(View v){
         Intent intent = new Intent(MainActivity.this, AllMusicActivity.class);

@@ -1,49 +1,47 @@
 package com.ghd.ts.ddmusic;
 
 import android.Manifest;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ghd.ts.ddmusic.adapter.MainAdapter;
 import com.ghd.ts.ddmusic.adapter.MusicAdapter;
 import com.ghd.ts.ddmusic.entity.Music;
-import com.ghd.ts.ddmusic.fragment.AllMusicMusicFragment;
-import com.ghd.ts.ddmusic.fragment.AllMusicSingerFragment;
-import com.ghd.ts.ddmusic.fragment.MainFindFragment;
-import com.ghd.ts.ddmusic.fragment.MainMineFragment;
+import com.ghd.ts.ddmusic.service.MusicService;
 import com.ghd.ts.ddmusic.utils.MusicUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class AllMusicActivity extends AppCompatActivity {
 
-    private MediaPlayer mplayer=new MediaPlayer();
-
     private ArrayList<Music> list;
-
     private int mPosition;
-
     private String mMusicName;
+//    private ServiceConnection conn;
+    private MusicService.MusicBinder musicControl;
+    private ImageButton onOffButton;
+    private MusicService service  = null;
+    private boolean isBound = false;
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
 
 /*
     private List<Fragment> mFragmentList = new ArrayList<Fragment>();
@@ -110,6 +108,23 @@ public class AllMusicActivity extends AppCompatActivity {
     }
 */
 
+    private ServiceConnection conn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder binder) {
+            isBound = true;
+            musicControl = (MusicService.MusicBinder)binder;
+            service = musicControl.getMusicService();
+            updatePlayText();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            isBound = false;
+        }
+    };
+
+
+
     private void initList(){
         list = MusicUtils.getMusicData(AllMusicActivity.this);
     }
@@ -131,55 +146,40 @@ public class AllMusicActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
-
 //        findById();
 //        init();
+        onOffButton = findViewById(R.id.on_off_button);
+//        Intent MusicServiceIntent = new Intent(this, MusicService.class);
+//        conn = new MyConnection();
+//        startService(MusicServiceIntent);
+//        bindService(MusicServiceIntent, conn, BIND_AUTO_CREATE);
+
+        Intent intent = new Intent(this, MusicService.class);
+        bindService(intent, conn, BIND_AUTO_CREATE);
 
         MusicAdapter adapter = new MusicAdapter(AllMusicActivity.this, list);
         ListView listView = findViewById(R.id.all_music_list_item);
-        ImageButton onOffButton = findViewById(R.id.on_off_button);
-        onOffButton.setOnClickListener(new View.OnClickListener() {
-            ImageButton onOffButton = findViewById(R.id.on_off_button);
-            @Override
-                 public  void onClick(View v){
-                if (mplayer.isPlaying()) {
-                    mplayer.pause();
-                    onOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_play));
-                } else {
-                    mplayer.start();
-                    // thread = new Thread(new SeekBarThread());
-                    // thread.start();
-                    onOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_stop));
-                }
-            }
-        });
-
         listView.setAdapter(adapter);
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mPosition = position;
-                musicplay(position);
-                ImageButton onOffButton = findViewById(R.id.on_off_button);
+                service.setmPosition(position);
+                musicControl.play(list.get(mPosition).getPath());
+                updatePlayText();
                 TextView textView = findViewById(R.id.music_name_show);
-                onOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_stop));
                 Music music = list.get(position);
                 mMusicName = music.getMusicName().replaceAll(".mp3","");
                 textView.setText(music.getSinger()+" "+mMusicName);
-
-
+                onOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause));
             }
         });
 
-        TextView textView = findViewById(R.id.music_name_show);
+        //进入播放页
+       TextView textView = findViewById(R.id.music_name_show);
         textView.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(AllMusicActivity.this, ListenMusicShowActivity.class);
                 intent.putExtra("musicList",list);
                 intent.putExtra("position",mPosition);
@@ -195,35 +195,22 @@ public class AllMusicActivity extends AppCompatActivity {
             }
         });
 
-    }
+        final ImageButton onOffButton = findViewById(R.id.on_off_button);
+        onOffButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (musicControl.isPlaying()) {
+                    onOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_play));
+                    musicControl.pause();
+                } else {
+                    onOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause));
+                    musicControl.play(list.get(mPosition).getPath());
 
-/*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_all_music, menu);
-        return true;
-    }
-*/
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.back:
-                finish();
-                break;
-            case R.id.more:
-
-                Toast.makeText(AllMusicActivity.this,
-                        "" + "更多", Toast.LENGTH_SHORT).show();
-                break;
-            default:
-                break;
-        }
+                }
+            }
+        });
 
 
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -242,24 +229,14 @@ public class AllMusicActivity extends AppCompatActivity {
         }
     }
 
-    //播放音乐
-    private void musicplay(int position) {
-        try {
-            List<Music> list = MusicUtils.getMusicData(AllMusicActivity.this);
-            mplayer.reset();
-            mplayer.setDataSource(list.get(position).getPath());
-            mplayer.prepare();
-            mplayer.start();
-        } catch (Exception e) {
-            e.printStackTrace();
+    //更新下方的按钮
+    public void updatePlayText() {
+        if (musicControl.isPlaying()) {
+            onOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause));
+        } else {
+            onOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_play));
         }
     }
-
-/*    private void updateMusic(View view){
-
-
-
-    }*/
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -276,5 +253,10 @@ public class AllMusicActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //退出应用后与service解除绑定
+    }
 
 }

@@ -63,6 +63,7 @@
         android:layout_margin="20dp"
         android:layout_below="@id/pictures_linearlayout">
         <TextView
+            android:id="@+id/now_music_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="00:00"
@@ -100,9 +101,18 @@
         android:layout_alignParentBottom="true">
 
         <ImageButton
+            android:id="@+id/play_style"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/ic_cir"
+            android:scaleType="centerCrop"
+            android:background="@android:color/transparent"
+            android:layout_margin="10dp"/>
+
+        <ImageButton
             android:id="@+id/last_music"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/ic_last_music"
             android:scaleType="centerCrop"
             android:background="@android:color/transparent"
@@ -117,16 +127,16 @@
             android:layout_margin="10dp"/>
         <ImageButton
             android:id="@+id/next_music"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/ic_next_music"
             android:scaleType="centerCrop"
             android:background="@android:color/transparent"
             android:layout_margin="10dp"/>
         <ImageButton
-
-            android:layout_width="55dp"
-            android:layout_height="55dp"
+            android:id="@+id/all_music"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:src="@drawable/music_list"
             android:scaleType="centerCrop"
             android:background="@android:color/transparent"
