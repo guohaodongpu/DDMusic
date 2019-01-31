@@ -19,7 +19,7 @@ public class MusicUtils {
      */
     public static ArrayList<Music> getMusicData(Context context) {
         ArrayList<Music> list = new ArrayList<>();
-            Cursor cursor = context.getContentResolver().query(
+        Cursor cursor = context.getContentResolver().query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null,
                 null, null, MediaStore.Audio.AudioColumns.IS_MUSIC);
         if (cursor != null) {
@@ -61,12 +61,6 @@ public class MusicUtils {
         SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT+00:00"));
         return formatter.format(time);
-
-        /*if (time / 1000 % 60 < 10) {
-            return time / 1000 / 60 + ":0" + time / 1000 % 60;
-        } else {
-            return time / 1000 / 60 + ":" + time / 1000 % 60;
-        }*/
     }
 
 }

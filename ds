@@ -1,0 +1,78 @@
+[33mcommit e03d7f96c0b59acafc292824261e7adeb6432dfc[m
+Author: GuoHaodong <guohd0102@thundersoft.com>
+Date:   Thu Jan 31 10:50:25 2019 +0800
+
+    seekbar over
+
+[33mcommit 8b01008a11a0a5f630f0dce42f86887e350e0ef9[m
+Author: GuoHaodong <guohd0102@thundersoft.com>
+Date:   Wed Jan 30 13:18:06 2019 +0800
+
+    Completed playback, last song, next song, progress bar
+
+[33mcommit f93dacd420e9357f2f382ac7f2af4ec58c267288[m
+Author: GuoHaodong <guohd0102@thundersoft.com>
+Date:   Mon Jan 28 16:57:13 2019 +0800
+
+    2019-01-28
+
+[33mcommit 5c3538b67d46cb43b1a9be3e34c46efd39cefc3d[m
+Author: GuoHaodong <guohd0102@thundersoft.com>
+Date:   Tue Jan 15 17:21:16 2019 +0800
+
+    2019-01-15
+
+[33mcommit f1f27ed5bb1d37d388fc47c9924fa26638788dd4[m
+Author: GuoHaodong <guohd0102@thundersoft.com>
+Date:   Mon Jan 7 17:00:15 2019 +0800
+
+    2019-01-07:ghd
+
+[33mcommit db86a4d814c1f4b39760cf75dce0d73a049a18fd[m
+Author: GuoHaodong <guohd0102@thundersoft.com>
+Date:   Fri Jan 4 18:36:43 2019 +0800
+
+    listView
+
+[33mcommit a6b343da8053d494b83bcf219e86ba5311101c94[m
+Author: GuoHaodong <guohd0102@thundersoft.com>
+Date:   Fri Jan 4 16:18:29 2019 +0800
+
+    ddmusic_01_04
+
+[33mcommit f44c94e6fe08fd2e028ada7c4b4f07b5ae058fa0[m
+Author: GuoHaodong <guohd0102@thundersoft.com>
+Date:   Fri Jan 4 13:33:50 2019 +0800
+
+    index
+
+[33mcommit 8005a2241b68b2ee039587e7c86f2c5848aafa1d[m
+Author: GuoHaodong <guohd0102@thundersoft.com>
+Date:   Fri Jan 4 10:42:08 2019 +0800
+
+    change README.md
+
+[33mcommit 112c3804463f1e1becd76a86f79fd6a5f96cc6e0[m
+Merge: f71f01d b0fbd53
+Author: GuoHaodong <guohd0102@thundersoft.com>
+Date:   Fri Jan 4 10:26:56 2019 +0800
+
+    Merge branch 'master' of github.com:guohaodongpu/DDMusic
+
+[33mcommit f71f01dc2ef8cfeb57d0bd8f354a15de6c901e58[m
+Author: GuoHaodong <guohd0102@thundersoft.com>
+Date:   Fri Jan 4 10:16:34 2019 +0800
+
+    project demo
+
+[33mcommit 26c2a9a0a3592b893e67db63fb94d025e766eb97[m
+Author: GuoHaodong <guohd0102@thundersoft.com>
+Date:   Fri Jan 4 10:02:15 2019 +0800
+
+    project demo
+
+[33mcommit b0fbd531ba9f037c76e40208bd4ce24f51917293[m
+Author: Hadon Guo <guohaodongpu@qq.com>
+Date:   Thu Jan 3 11:53:49 2019 +0000
+
+    Initial commit

@@ -9,20 +9,21 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 public class MainAdapter extends FragmentPagerAdapter {
 
-    List<Fragment> fragmentList = new ArrayList<Fragment>();
+    List<Fragment> mFragmentList = new ArrayList<Fragment>();
+
     public MainAdapter(FragmentManager fm, List<Fragment> fragmentList) {
         super(fm);
-        this.fragmentList = fragmentList;
+        this.mFragmentList = fragmentList;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return fragmentList.get(position);
+        return mFragmentList.get(position);
     }
 
     @Override
     public int getCount() {
-        return fragmentList.size();
+        return mFragmentList.size();
     }
 
 }

@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -24,35 +22,30 @@ import android.widget.TextView;
 
 import com.ghd.ts.ddmusic.adapter.MainAdapter;
 import com.ghd.ts.ddmusic.adapter.MusicListAdapter;
-import com.ghd.ts.ddmusic.entity.Music;
 import com.ghd.ts.ddmusic.entity.MusicList;
 import com.ghd.ts.ddmusic.fragment.MainFindFragment;
 import com.ghd.ts.ddmusic.fragment.MainMineFragment;
 import com.ghd.ts.ddmusic.fragment.MainMusicFragment;
-import com.ghd.ts.ddmusic.service.MusicService;
 import com.ghd.ts.ddmusic.utils.MusicUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     private List<Fragment> mFragmentList = new ArrayList<Fragment>();
     private MainAdapter mFragmentAdapter;
-
     private ViewPager mPageVp;
     private TextView mTabMineTv, mTabFindTv, mTabMusicTv;
     private ImageView mTabLineIv;
-
     private MainMineFragment mMineFg;
     private MainFindFragment mFindFg;
     private MainMusicFragment mMusicFg;
-
-    private int currentIndex;
-    private int screenWidth;
-    private ImageButton onOffButton;
-    private TextView musicNameTextView;
+    private int mCurrentIndex;
+    private int mScreenWidth;
+    private ImageButton mOnOffButton;
+    private TextView mMusicNameTextView;
 
     private void findById() {
         mTabMineTv = this.findViewById(R.id.top_mine);
@@ -104,26 +97,26 @@ public class MainActivity extends AppCompatActivity
                  * 0->1; 1->2; 2->1; 1->0
                  */
 /*
-                if (currentIndex == 0 && position == 0)// 0->1
+                if (mCurrentIndex == 0 && position == 0)// 0->1
                 {
-                    lp.leftMargin = (int) (offset * (screenWidth * 1.0 / 3) + currentIndex
-                            * (screenWidth / 3));
+                    lp.leftMargin = (int) (offset * (mScreenWidth * 1.0 / 3) + mCurrentIndex
+                            * (mScreenWidth / 3));
 
-                } else if (currentIndex == 1 && position == 0) // 1->0
+                } else if (mCurrentIndex == 1 && position == 0) // 1->0
                 {
                     lp.leftMargin = (int) (-(1 - offset)
-                            * (screenWidth * 1.0 / 3) + currentIndex
-                            * (screenWidth / 3));
+                            * (mScreenWidth * 1.0 / 3) + mCurrentIndex
+                            * (mScreenWidth / 3));
 
-                } else if (currentIndex == 1 && position == 1) // 1->2
+                } else if (mCurrentIndex == 1 && position == 1) // 1->2
                 {
-                    lp.leftMargin = (int) (offset * (screenWidth * 1.0 / 3) + currentIndex
-                            * (screenWidth / 3));
-                } else if (currentIndex == 2 && position == 1) // 2->1
+                    lp.leftMargin = (int) (offset * (mScreenWidth * 1.0 / 3) + mCurrentIndex
+                            * (mScreenWidth / 3));
+                } else if (mCurrentIndex == 2 && position == 1) // 2->1
                 {
                     lp.leftMargin = (int) (-(1 - offset)
-                            * (screenWidth * 1.0 / 3) + currentIndex
-                            * (screenWidth / 3));
+                            * (mScreenWidth * 1.0 / 3) + mCurrentIndex
+                            * (mScreenWidth / 3));
                 }
                 mTabLineIv.setLayoutParams(lp);*/
             }
@@ -142,7 +135,7 @@ public class MainActivity extends AppCompatActivity
                         mTabFindTv.setTextColor(Color.WHITE);
                         break;
                 }
-                currentIndex = position;
+                mCurrentIndex = position;
             }
         });
 
@@ -153,10 +146,10 @@ public class MainActivity extends AppCompatActivity
         DisplayMetrics dpMetrics = new DisplayMetrics();
         getWindow().getWindowManager().getDefaultDisplay()
                 .getMetrics(dpMetrics);
-        screenWidth = dpMetrics.widthPixels;
+        mScreenWidth = dpMetrics.widthPixels;
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mTabLineIv
                 .getLayoutParams();
-        lp.width = screenWidth / 4;
+        lp.width = mScreenWidth / 4;
         mTabLineIv.setLayoutParams(lp);
     }*/
 
@@ -194,7 +187,7 @@ public class MainActivity extends AppCompatActivity
 
 
         //initMusicList();
-        View view=View.inflate(getApplicationContext(),R.layout.layout_activity_main_tab_mine, null);
+        View view = View.inflate(getApplicationContext(), R.layout.layout_activity_main_tab_mine, null);
         MusicListAdapter adapter = new MusicListAdapter(
                 MainActivity.this, R.layout.layout_music_list_list, mMusicListList);
         ListView listView = view.findViewById(R.id.music_list_list_item);
@@ -224,12 +217,11 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
 
                 Intent intent = new Intent(MainActivity.this, ListenMusicShowActivity.class);
-                intent.putExtra("musicList",MusicUtils.getMusicData(MainActivity.this));
-                intent.putExtra("position",0);
+                intent.putExtra("musicList", MusicUtils.getMusicData(MainActivity.this));
+                intent.putExtra("position", 0);
                 startActivity(intent);
             }
         });
-
 
 
     }
@@ -313,13 +305,15 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    public void allMusic(View v) {
+        Intent intent = new Intent(MainActivity.this, AllMusicActivity.class);
+        startActivity(intent);
+    }
 
-    public void allMusic(View v){
+    public void downloadMusic(View v) {
         Intent intent = new Intent(MainActivity.this, AllMusicActivity.class);
         startActivity(intent);
     }
-    public void downloadMusic(View v){
-        Intent intent = new Intent(MainActivity.this, AllMusicActivity.class);
-        startActivity(intent);
-    }
+
+
 }

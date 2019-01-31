@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary"
-    android:orientation="horizontal"
     android:gravity="center"
+    android:orientation="horizontal"
     android:padding="10dp">
 
     <ImageButton
@@ -12,19 +12,19 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:background="@android:color/transparent"
+        android:foreground="?android:attr/selectableItemBackground"
         android:scaleType="centerCrop"
-        android:src="@drawable/back"
-        android:foreground="?android:attr/selectableItemBackground"/>
+        android:src="@drawable/back" />
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_weight="1"
         android:gravity="center"
-        android:layout_gravity="center"
         android:text="@string/allmusic_title"
         android:textSize="18dp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <ImageButton
         android:id="@+id/open_music_button"

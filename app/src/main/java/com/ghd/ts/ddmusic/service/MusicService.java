@@ -4,9 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Binder;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.util.Log;
 
 import com.ghd.ts.ddmusic.AllMusicActivity;
@@ -20,7 +18,7 @@ public class MusicService extends Service {
 
     private MediaPlayer mPlayer;
     public static int mPosition;
-    private int mPlayStyle = 0; // 默认单曲循环
+    public static int mPlayStyle = 0; // 默认单曲循环
     private List<Music> mMusicList;
     private Random mRandom;
     public static boolean mIsplaying;
@@ -39,7 +37,7 @@ public class MusicService extends Service {
         this.mPosition = position;
     }
 
-    public void setPlayStyle(int playStyle){
+    public void setPlayStyle(int playStyle) {
         this.mPlayStyle = playStyle;
     }
 
@@ -47,14 +45,14 @@ public class MusicService extends Service {
         return mPlayStyle;
     }
 
-    public  void setmIsplaying(boolean mIsplaying) {
+    public void setmIsplaying(boolean mIsplaying) {
         MusicService.mIsplaying = mIsplaying;
     }
 
     public void onCreate() {
         super.onCreate();
         mPlayer = new MediaPlayer();
-        mMusicList = AllMusicActivity.list;
+        mMusicList = AllMusicActivity.mList;
         mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
@@ -76,7 +74,6 @@ public class MusicService extends Service {
     }
 
 
-
     @Override
     public IBinder onBind(Intent intent) {
         return new MusicBinder();
@@ -84,7 +81,7 @@ public class MusicService extends Service {
 
     public class MusicBinder extends Binder {
 
-        public MusicService getMusicService(){
+        public MusicService getMusicService() {
             return MusicService.this;
         }
 
@@ -100,30 +97,40 @@ public class MusicService extends Service {
                 setmIsplaying(false);
             }
         }
+
+        //继续播放
+        public void playContinue() {
+
+            if (!mPlayer.isPlaying()) {
+                mPlayer.start();
+                setmIsplaying(true);
+            }
+        }
+
         //播放歌曲
         public void play(int position) {
             setPosition(position);
             mMusic = mMusicList.get(position);
             setmIsplaying(true);
-                try {
-                    mPlayer.reset();
-                    mPlayer.setDataSource(mMusicList.get(mPosition).getPath());
-                    mPlayer.prepare();
-                } catch (IOException e) {
-                    e.printStackTrace();
+            try {
+                mPlayer.reset();
+                mPlayer.setDataSource(mMusicList.get(mPosition).getPath());
+                mPlayer.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mPlayer.start();
                 }
-                mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mp) {
-                        mPlayer.start();
-                    }
-                });
-                Log.e("服务", "播放音乐");
+            });
+            //Log.e("服务", "播放音乐");
 
         }
 
         //停止播放
-        public void stop(){
+        public void stop() {
             mPlayer.stop();
             setmIsplaying(false);
         }
@@ -144,12 +151,12 @@ public class MusicService extends Service {
         }
 
         //单曲循环
-        private void cil_nextMusic(){
+        private void cil_nextMusic() {
             play(mPosition);
         }
 
         // 随机播放
-        private void random_nextMusic(){
+        private void random_nextMusic() {
             mRandom = new Random();
             mPosition = mPosition + mRandom.nextInt(mMusicList.size() - 1);
             mPosition %= mMusicList.size();
@@ -158,7 +165,7 @@ public class MusicService extends Service {
         }
 
         // 顺序播放
-        private void list_cil_nextMusic(){
+        private void list_cil_nextMusic() {
             nextMusic();
         }
 

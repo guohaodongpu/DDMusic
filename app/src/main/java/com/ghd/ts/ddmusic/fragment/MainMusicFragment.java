@@ -9,14 +9,17 @@ import android.view.ViewGroup;
 import com.ghd.ts.ddmusic.R;
 
 public class MainMusicFragment extends Fragment {
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View chatView = inflater.inflate(R.layout.layout_activity_main_tab_music, container,false);
+        View chatView = inflater.inflate(R.layout.layout_activity_main_tab_music,
+                container, false);
         return chatView;
     }
+
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
 }

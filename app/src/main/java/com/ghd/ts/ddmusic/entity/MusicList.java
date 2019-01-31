@@ -2,39 +2,39 @@ package com.ghd.ts.ddmusic.entity;
 
 public class MusicList {
 
-    private String name;
+    private String mName;
 
-    private String description;
+    private String mDescription;
 
-    private int imageId;
+    private int mImageId;
 
     public MusicList(String name, String description, int imageId) {
-        this.name = name;
-        this.description = description;
-        this.imageId = imageId;
+        this.mName = name;
+        this.mDescription = description;
+        this.mImageId = imageId;
     }
 
     public String getName() {
-        return name;
+        return mName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.mName = name;
     }
 
     public int getImageId() {
-        return imageId;
+        return mImageId;
     }
 
-    public void setImageId(int imageId) {
-        this.imageId = imageId;
+    public void setImageId(int mImageId) {
+        this.mImageId = mImageId;
     }
 
     public String getDescription() {
-        return description;
+        return mDescription;
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this.mDescription = description;
     }
 }

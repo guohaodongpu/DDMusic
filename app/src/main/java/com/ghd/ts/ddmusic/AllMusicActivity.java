@@ -13,11 +13,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -30,13 +31,14 @@ import com.ghd.ts.ddmusic.utils.MusicUtils;
 
 import java.util.ArrayList;
 
-public class AllMusicActivity extends AppCompatActivity {
+public class AllMusicActivity extends SlideBackActivity {
 
-    public static ArrayList<Music> list;
+    public static ArrayList<Music> mList;
     private String mMusicName;
-    private MusicService.MusicBinder musicControl;
-    private ImageButton onOffButton;
-    private MusicService service = null;
+    private MusicService.MusicBinder mMusicControl;
+    private ImageButton mOnOffButton;
+    private ImageView mImageView;
+    private MusicService mService = null;
     private boolean isBound = false;
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
@@ -124,10 +126,8 @@ public class AllMusicActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             isBound = true;
-            musicControl = (MusicService.MusicBinder) binder;
-            service = musicControl.getMusicService();
-            mSeekBar.setMax(musicControl.getDuration());
-            mSeekBar.setProgress(musicControl.getCurrenPostion());
+            mMusicControl = (MusicService.MusicBinder) binder;
+            mService = mMusicControl.getMusicService();
             updatePlayText();
         }
 
@@ -139,14 +139,13 @@ public class AllMusicActivity extends AppCompatActivity {
 
 
     private void initList() {
-        list = MusicUtils.getMusicData(AllMusicActivity.this);
+        mList = MusicUtils.getMusicData(AllMusicActivity.this);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_music);
-
         if (ContextCompat.checkSelfPermission(AllMusicActivity.this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(AllMusicActivity.this, new String[]{
@@ -161,7 +160,7 @@ public class AllMusicActivity extends AppCompatActivity {
         }
 //        findById();
 //        init();
-        onOffButton = findViewById(R.id.on_off_button);
+        mOnOffButton = findViewById(R.id.on_off_button);
 //        Intent MusicServiceIntent = new Intent(this, MusicService.class);
 //        conn = new MyConnection();
 //        startService(MusicServiceIntent);
@@ -170,19 +169,23 @@ public class AllMusicActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MusicService.class);
         bindService(intent, conn, BIND_AUTO_CREATE);
 
-        MusicAdapter adapter = new MusicAdapter(AllMusicActivity.this, list);
+        MusicAdapter adapter = new MusicAdapter(AllMusicActivity.this, mList);
         ListView listView = findViewById(R.id.all_music_list_item);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                musicControl.play(position);
+                mMusicControl.play(position);
                 updatePlayText();
                 mMusicNameTextView = findViewById(R.id.music_name_show);
-                Music music = list.get(position);
+                Music music = mList.get(position);
                 mMusicName = music.getMusicName().replaceAll(".mp3", "");
-                mMusicNameTextView.setText(music.getSinger() + " " + mMusicName);
-                onOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause));
+                mMusicNameTextView.setText(music.getSinger() + "-" + mMusicName);
+                mOnOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause));
+                mSeekBar.setMax(mMusicControl.getDuration());
+                mSeekBar.setProgress(mMusicControl.getCurrenPostion());
+                updateMusicImageViewRotate();
+                handler.sendEmptyMessage(UPDATE_PROGRESS);
             }
         });
 
@@ -191,7 +194,8 @@ public class AllMusicActivity extends AppCompatActivity {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AllMusicActivity.this, ListenMusicShowActivity.class);
+                Intent intent = new Intent(AllMusicActivity.this,
+                        ListenMusicShowActivity.class);
                 startActivity(intent);
             }
         });
@@ -210,12 +214,13 @@ public class AllMusicActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (MusicService.mIsplaying) {
                     onOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_play));
-                    musicControl.pause();
+                    mMusicControl.pause();
                 } else {
                     onOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause));
-                    musicControl.play(service.getPosition());
+                    mMusicControl.playContinue();
 
                 }
+                updateMusicImageViewRotate();
             }
         });
 
@@ -223,7 +228,7 @@ public class AllMusicActivity extends AppCompatActivity {
         ImageButton lastMusicButton = findViewById(R.id.last_music);
         lastMusicButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                musicControl.lastMusic();
+                mMusicControl.lastMusic();
                 updateTitle();
             }
         });
@@ -232,18 +237,19 @@ public class AllMusicActivity extends AppCompatActivity {
         nextMusicButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                musicControl.nextMusic();
+                mMusicControl.nextMusic();
                 updateTitle();
             }
         });
 
-        mSeekBar = findViewById(R.id.seekBar);
-
+        mSeekBar = findViewById(R.id.bottom_seekBar);
+        mImageView = findViewById(R.id.buttom_music_image);
     }
 
     private void updateTitle() {
-        Music music = AllMusicActivity.list.get(MusicService.mPosition);
-        mMusicNameTextView.setText(music.getMusicName().replaceAll(".mp3", ""));
+        Music music = AllMusicActivity.mList.get(MusicService.mPosition);
+        mMusicName = music.getMusicName().replaceAll(".mp3", "");
+        mMusicNameTextView.setText(music.getSinger() + "-" + mMusicName);
     }
 
     @Override
@@ -251,7 +257,8 @@ public class AllMusicActivity extends AppCompatActivity {
                                            @NonNull int[] grantResults) {
         switch (requestCode) {
             case 1:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] ==
+                        PackageManager.PERMISSION_GRANTED) {
                     initList();
                 } else {
                     Toast.makeText(this, "权限不足", Toast.LENGTH_LONG).show();
@@ -265,9 +272,9 @@ public class AllMusicActivity extends AppCompatActivity {
     //更新下方的按钮
     public void updatePlayText() {
         if (MusicService.mIsplaying) {
-            onOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause));
+            mOnOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause));
         } else {
-            onOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_play));
+            mOnOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_play));
         }
     }
 
@@ -288,7 +295,7 @@ public class AllMusicActivity extends AppCompatActivity {
 
     //更新进度条
     private void updateProgress() {
-        mCurrenPostion = musicControl.getCurrenPostion();
+        mCurrenPostion = mMusicControl.getCurrenPostion();
         mSeekBar.setProgress(mCurrenPostion);
         //使用Handler每500毫秒更新一次进度条
         handler.sendEmptyMessageDelayed(UPDATE_PROGRESS, 300);
@@ -302,8 +309,23 @@ public class AllMusicActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        updatePlayText();
+        if (mMusicControl != null) {
+            handler.sendEmptyMessage(UPDATE_PROGRESS);
+            updatePlayText();
+        }
+        updateMusicImageViewRotate();
     }
+
+
+    public void updateMusicImageViewRotate() {
+        if (!MusicService.mIsplaying) {
+            mImageView.clearAnimation();
+        } else {
+            mImageView.startAnimation(AnimationUtils.loadAnimation(
+                    AllMusicActivity.this, R.anim.imageview_rotate));
+        }
+    }
+
 
     @Override
     protected void onDestroy() {

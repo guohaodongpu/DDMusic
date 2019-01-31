@@ -9,52 +9,53 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:background="@color/colorPrimary"
-        android:orientation="horizontal"
         android:gravity="center"
-        android:padding="10dp">
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/black_button"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@android:color/transparent"
+            android:foreground="?android:attr/selectableItemBackground"
             android:scaleType="centerCrop"
-            android:src="@drawable/back"
-            android:foreground="?android:attr/selectableItemBackground"/>
+            android:src="@drawable/back" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            android:layout_gravity="center"
             android:text="@string/allmusic_title"
-            android:textSize="18dp"
-            android:textStyle="bold"/>
+            android:textColor="#ffffff"
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
         <ImageButton
             android:id="@+id/open_music_button"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@android:color/transparent"
             android:scaleType="centerCrop"
             android:src="@drawable/ddd" />
 
     </LinearLayout>
-        <!--<include layout="@layout/layout_activity_allmusic_top_tab" />
-        <android.support.v4.view.ViewPager
-            android:id="@+id/id_page_vp"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" >
-        </android.support.v4.view.ViewPager>-->
+    <!--<include layout="@layout/layout_activity_allmusic_top_tab" />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/id_page_vp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+    </android.support.v4.view.ViewPager>-->
     <ListView
         android:id="@+id/all_music_list_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
-        <include layout="@layout/layout_bottom_title"/>
+        android:layout_weight="1" />
 
-    </LinearLayout>
+    <include layout="@layout/layout_bottom_title" />
+
+</LinearLayout>

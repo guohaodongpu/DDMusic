@@ -1,7 +1,5 @@
 package com.ghd.ts.ddmusic.entity;
 
-import android.widget.CursorAdapter;
-
 import java.io.Serializable;
 
 public class Music implements Serializable {
@@ -14,9 +12,9 @@ public class Music implements Serializable {
 
     private int mDuration; //歌曲长度
 
-    private String imageId; //歌曲图片
+    private String mImageId; //歌曲图片
 
-    private long size;
+    private long mSize;
 
     //CursorAdapter
 
@@ -63,18 +61,18 @@ public class Music implements Serializable {
     }
 
     public String getImageId() {
-        return imageId;
+        return mImageId;
     }
 
     public void setImageId(String imageId) {
-        this.imageId = imageId;
+        this.mImageId = imageId;
     }
 
     public long getSize() {
-        return size;
+        return mSize;
     }
 
     public void setSize(long size) {
-        this.size = size;
+        this.mSize = size;
     }
 }

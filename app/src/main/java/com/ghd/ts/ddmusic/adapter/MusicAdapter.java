@@ -1,7 +1,6 @@
 package com.ghd.ts.ddmusic.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -15,27 +14,27 @@ import com.ghd.ts.ddmusic.utils.MusicUtils;
 import java.util.List;
 
 public class MusicAdapter extends BaseAdapter {
-    private Context context;
-    private List<Music> list;
-    private int position_flag = 0;
+    private Context mContext;
+    private List<Music> mList;
+    private int mPositionFlag = 0;
 
     public MusicAdapter(AllMusicActivity allMusicActivity, List<Music> list) {
-        this.context = allMusicActivity;
-        this.list = list;
+        this.mContext = allMusicActivity;
+        this.mList = list;
     }
 
     @Override
     public int getCount() {
-        if(list == null){
+        if (mList == null) {
             return 0;
-        }else {
-            return list.size();
+        } else {
+            return mList.size();
         }
     }
 
     @Override
     public Object getItem(int i) {
-        return list.get(i);
+        return mList.get(i);
     }
 
     @Override
@@ -50,7 +49,7 @@ public class MusicAdapter extends BaseAdapter {
         if (view == null) {
             holder = new ViewHolder();
             // 引入布局
-            view = View.inflate(context, R.layout.layout_all_music_list, null);
+            view = View.inflate(mContext, R.layout.layout_all_music_list, null);
             // 实例化对象
             holder.song = view.findViewById(R.id.music_name);
             holder.singer = view.findViewById(R.id.music_singer);
@@ -61,7 +60,7 @@ public class MusicAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
         // 给控件赋值
-        String string_song = list.get(i).getMusicName();
+        String string_song = mList.get(i).getMusicName();
         if (string_song.length() >= 5
                 && string_song.substring(string_song.length() - 4,
                 string_song.length()).equals(".mp3")) {
@@ -70,13 +69,14 @@ public class MusicAdapter extends BaseAdapter {
         } else {
             holder.song.setText(string_song.trim());
         }
-        holder.singer.setText(list.get(i).getSinger().trim());
+        holder.singer.setText(mList.get(i).getSinger().trim());
         // 时间转换为时分秒
-        int duration = list.get(i).getDuration();
+        int duration = mList.get(i).getDuration();
         String time = MusicUtils.formatTime(duration);
         holder.duration.setText(time);
         return view;
     }
+
     class ViewHolder {
         TextView song;// 歌曲名
         TextView singer;// 歌手
