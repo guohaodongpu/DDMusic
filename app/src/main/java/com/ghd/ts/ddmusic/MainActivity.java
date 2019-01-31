@@ -17,16 +17,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ghd.ts.ddmusic.adapter.MainAdapter;
 import com.ghd.ts.ddmusic.adapter.MusicListAdapter;
+import com.ghd.ts.ddmusic.entity.Music;
 import com.ghd.ts.ddmusic.entity.MusicList;
 import com.ghd.ts.ddmusic.fragment.MainFindFragment;
 import com.ghd.ts.ddmusic.fragment.MainMineFragment;
 import com.ghd.ts.ddmusic.fragment.MainMusicFragment;
+import com.ghd.ts.ddmusic.service.MusicService;
 import com.ghd.ts.ddmusic.utils.MusicUtils;
 
 import java.util.ArrayList;
@@ -47,8 +50,9 @@ public class MainActivity extends AppCompatActivity
     private MainMusicFragment mMusicFg;
 
     private int currentIndex;
-
     private int screenWidth;
+    private ImageButton onOffButton;
+    private TextView musicNameTextView;
 
     private void findById() {
         mTabMineTv = this.findViewById(R.id.top_mine);
@@ -308,25 +312,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-//    private void initMusicList() {
-//        for (int i = 0; i < 2; i++) {
-//            MusicList zhoujielun = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
-//            mMusicListList.add(zhoujielun);
-//            MusicList zhoujielun1 = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
-//            mMusicListList.add(zhoujielun1);
-//            MusicList zhoujielun2 = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
-//            mMusicListList.add(zhoujielun2);
-//            MusicList zhoujielun3 = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
-//            mMusicListList.add(zhoujielun3);
-//            MusicList zhoujielun4 = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
-//            mMusicListList.add(zhoujielun4);
-//            MusicList zhoujielun5 = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
-//            mMusicListList.add(zhoujielun5);
-//            MusicList zhoujielun6 = new MusicList("周杰伦", "这是周杰伦的专辑", R.drawable.music);
-//            mMusicListList.add(zhoujielun6);
-//
-//        }
-//    }
+
 
     public void allMusic(View v){
         Intent intent = new Intent(MainActivity.this, AllMusicActivity.class);

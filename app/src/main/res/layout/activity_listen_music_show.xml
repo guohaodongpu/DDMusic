@@ -47,11 +47,17 @@
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:gravity="center">
+
+<!--    <com.ghd.ts.ddmusic.View.RoundImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_margin="10dp"
+            android:src="@drawable/chen" />-->
     <ImageView
         android:id="@+id/music_image"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:src="@drawable/music"
+        android:src="@drawable/chen"
         android:scaleType="centerCrop"
         />
     </LinearLayout>
@@ -140,7 +146,8 @@
             android:src="@drawable/music_list"
             android:scaleType="centerCrop"
             android:background="@android:color/transparent"
-            android:layout_margin="10dp"/>
+            android:layout_margin="10dp"
+            android:onClick="allMusic"/>
 
     </LinearLayout>
 

@@ -1,22 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="wrap_content"
     android:background="#f0f0f0"
-    android:orientation="horizontal"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:orientation="vertical">
 
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:thumb="@null"
+        android:paddingStart="0dp"
+        android:paddingEnd="0dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/open_music_button"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
             android:layout_marginLeft="10sp"
             android:background="@android:color/transparent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/music"
             android:onClick="backLast"
-            />
+            android:scaleType="centerCrop"
+            android:src="@drawable/chen" />
 
         <TextView
             android:id="@+id/music_name_show"
@@ -24,20 +37,37 @@
             android:layout_height="50sp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="当前没有播放歌曲"/>
+            android:text="当前没有播放歌曲" />
+
+        <ImageButton
+            android:id="@+id/last_music"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
+            android:background="@android:color/transparent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_last_music" />
 
         <ImageButton
             android:id="@+id/on-off_button"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginRight="15sp"
             android:layout_marginLeft="5sp"
+            android:layout_marginRight="5sp"
             android:background="@android:color/transparent"
             android:foreground="?android:attr/selectableItemBackground"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_play" />
 
         <ImageButton
+            android:id="@+id/next_music"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
+            android:background="@android:color/transparent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_next_music" />
+        <!--<ImageButton
             android:id="@+id/songList_button"
             android:layout_width="36dp"
             android:layout_height="36dp"
@@ -45,8 +75,8 @@
             android:background="@android:color/transparent"
             android:foreground="?android:attr/selectableItemBackground"
             android:scaleType="centerCrop"
-            android:src="@drawable/music_list" />
+            android:src="@drawable/music_list" />-->
 
-
+    </LinearLayout>
 
 </LinearLayout>

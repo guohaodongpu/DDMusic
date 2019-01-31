@@ -4,79 +4,77 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.util.Log;
 
+import com.ghd.ts.ddmusic.AllMusicActivity;
 import com.ghd.ts.ddmusic.entity.Music;
-import com.ghd.ts.ddmusic.utils.MusicUtils;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class MusicService extends Service {
 
+    private MediaPlayer mPlayer;
+    public static int mPosition;
+    private int mPlayStyle = 0; // 默认单曲循环
+    private List<Music> mMusicList;
+    private Random mRandom;
+    public static boolean mIsplaying;
+    private static Music mMusic;
 
-    private MediaPlayer player;
-    private int mPosition;
-    private String path;
-    private int play_style = 0;//默认单曲循环
-    private Music music;
 
     public MusicService() {
 
     }
 
-    public int getmPosition() {
-        return mPosition;
+    public int getPosition() {
+        return this.mPosition;
     }
 
-    public MediaPlayer getPlayer() {
-        return player;
+    public void setPosition(int position) {
+        this.mPosition = position;
     }
 
-    public void setPlayer(MediaPlayer player) {
-        this.player = player;
+    public void setPlayStyle(int playStyle){
+        this.mPlayStyle = playStyle;
     }
 
-    public void setmPosition(int mPosition) {
-        this.mPosition = mPosition;
+    public int getPlayStyle() {
+        return mPlayStyle;
     }
 
-    public void setPlay_style(int play_style){
-        this.play_style = play_style;
+    public  void setmIsplaying(boolean mIsplaying) {
+        MusicService.mIsplaying = mIsplaying;
     }
 
     public void onCreate() {
         super.onCreate();
-        player = new MediaPlayer();
-        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        mPlayer = new MediaPlayer();
+        mMusicList = AllMusicActivity.list;
+        mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                Intent intent = new Intent();
-                intent.setAction("com.ghd.ddmusic.play_style");
-                switch (play_style) {
+                switch (mPlayStyle) {
                     case 0://单曲循环
-                        intent.putExtra("play_style", 0);
-                        sendBroadcast(intent);
+                        new MusicBinder().cil_nextMusic();
                         break;
-                    case 1://顺序播放
-                        intent.putExtra("play_style", 1);
-                        sendBroadcast(intent);
+                    case 1://随机播放
+                        new MusicBinder().random_nextMusic();
                         break;
-                    case 2://随机播放
-                        intent.putExtra("play_style", 2);
-                        sendBroadcast(intent);
+                    case 2://顺序播放
+                        new MusicBinder().list_cil_nextMusic();
                         break;
                     default:
                         break;
                 }
             }
         });
-
-
     }
+
 
 
     @Override
@@ -90,38 +88,34 @@ public class MusicService extends Service {
             return MusicService.this;
         }
 
-        private ArrayList<Music> list;
         //判断是否处于播放状态
         public boolean isPlaying() {
-            return player.isPlaying();
-        }
-
-        //setMuisicList
-
-        public void setMuisicList(ArrayList<Music> list){
-            this.list = list;
+            return mPlayer.isPlaying();
         }
 
         //暂停歌曲
         public void pause() {
-            if (player.isPlaying()) {
-                player.pause();
+            if (mPlayer.isPlaying()) {
+                mPlayer.pause();
+                setmIsplaying(false);
             }
         }
-
         //播放歌曲
-        public void play(String playPath) {
+        public void play(int position) {
+            setPosition(position);
+            mMusic = mMusicList.get(position);
+            setmIsplaying(true);
                 try {
-                    player.reset();
-                    player.setDataSource(playPath);
-                    player.prepare();
+                    mPlayer.reset();
+                    mPlayer.setDataSource(mMusicList.get(mPosition).getPath());
+                    mPlayer.prepare();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
-                        player.start();
+                        mPlayer.start();
                     }
                 });
                 Log.e("服务", "播放音乐");
@@ -130,26 +124,63 @@ public class MusicService extends Service {
 
         //停止播放
         public void stop(){
-            player.stop();
+            mPlayer.stop();
+            setmIsplaying(false);
         }
 
         //返回歌曲的长度，单位为毫秒
         public int getDuration() {
-            return player.getDuration();
+            return mPlayer.getDuration();
         }
 
         //返回歌曲目前的进度，单位为毫秒
         public int getCurrenPostion() {
-            return player.getCurrentPosition();
+            return mPlayer.getCurrentPosition();
         }
 
         //设置歌曲播放的进度，单位为毫秒
         public void seekTo(int mesc) {
-            player.seekTo(mesc);
+            mPlayer.seekTo(mesc);
+        }
+
+        //单曲循环
+        private void cil_nextMusic(){
+            play(mPosition);
+        }
+
+        // 随机播放
+        private void random_nextMusic(){
+            mRandom = new Random();
+            mPosition = mPosition + mRandom.nextInt(mMusicList.size() - 1);
+            mPosition %= mMusicList.size();
+            setPosition(mPosition);
+            play(mPosition);
+        }
+
+        // 顺序播放
+        private void list_cil_nextMusic(){
+            nextMusic();
+        }
+
+        // 上一曲
+        public void lastMusic() {
+            setPosition(--mPosition);
+            if (mPosition < 0) {
+                mPosition = mMusicList.size() - 1;
+            }
+            play(mPosition);
+        }
+
+        // 下一曲
+        public void nextMusic() {
+            setPosition(++mPosition);
+            if (mPosition > mMusicList.size() - 1) {
+                mPosition = 0;
+            }
+            play(mPosition);
         }
 
     }
-
 
 
 }

@@ -4,9 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -25,38 +23,34 @@ import com.ghd.ts.ddmusic.service.MusicService;
 import com.ghd.ts.ddmusic.utils.MusicUtils;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class ListenMusicShowActivity extends AppCompatActivity {
 
-    private ArrayList<Music> list;
     private int mPosition;
     private TextView musicNameTextView;
     private TextView musicDurationTextView;
-    private TextView  musicNowDurationTextView;
+    private TextView musicNowDurationTextView;
     private ImageView mImageView;
     private ImageButton changePlayStyle;
+    private ImageButton onOffButton;
     private MusicService.MusicBinder musicControl;
     private SeekBar mSeekBar;
     private boolean isBound = false;
     private MusicService service = null;
-    private int mCurrentposition;
-    private Random random;
     private static final int UPDATE_PROGRESS = 0;
-    private MyReceiver receiver;
-    private int play_style;
+    private int mCurrenPostion;
 
     private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             isBound = true;
-            musicControl = (MusicService.MusicBinder)binder;
+            musicControl = (MusicService.MusicBinder) binder;
             service = musicControl.getMusicService();
-            mPosition = service.getmPosition();
+            mPosition = MusicService.mPosition;
             mSeekBar.setMax(musicControl.getDuration());
             mSeekBar.setProgress(musicControl.getCurrenPostion());
-            resetMusicNameTitle(mPosition);
-
+            updatePlayBtn();
+            updateTitle();
         }
 
         @Override
@@ -88,27 +82,22 @@ public class ListenMusicShowActivity extends AppCompatActivity {
         musicDurationTextView = findViewById(R.id.music_duration);
         musicNowDurationTextView = findViewById(R.id.now_music_duration);
 
+        Intent intent = new Intent(this, MusicService.class);
+        bindService(intent, conn, BIND_AUTO_CREATE);
 
+        musicDurationTextView.setText(MusicUtils.formatTime(AllMusicActivity
+                .list.get(MusicService.mPosition).getDuration()));
 
-        Intent intent2 = new Intent(this, MusicService.class);
-        bindService(intent2, conn, BIND_AUTO_CREATE);
-
-        Intent intent = getIntent();
-        list = (ArrayList<Music>) intent.getSerializableExtra("musicList");
-        Music music = list.get(mPosition);
-        musicNameTextView.setText(music.getMusicName().replaceAll(".mp3", ""));
-        musicDurationTextView.setText(MusicUtils.formatTime(music.getDuration()));
-
-        final ImageButton onOffButton = findViewById(R.id.music_list_on_off);
+        onOffButton = findViewById(R.id.music_list_on_off);
         onOffButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (musicControl.isPlaying()) {
-                    onOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause));
+                    onOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_play));
                     musicControl.pause();
                 } else {
-                    musicControl.play(list.get(mPosition).getPath());
-                    onOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_play));
+                    musicControl.play(MusicService.mPosition);
+                    onOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause));
                 }
             }
         });
@@ -124,8 +113,8 @@ public class ListenMusicShowActivity extends AppCompatActivity {
         ImageButton lastMusicButton = findViewById(R.id.last_music);
         lastMusicButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                frontMusic(mPosition);
-                resetMusicNameTitle(mPosition);
+                musicControl.lastMusic();
+                updateTitle();
             }
         });
 
@@ -133,8 +122,8 @@ public class ListenMusicShowActivity extends AppCompatActivity {
         nextMusicButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nextMusic(mPosition);
-                resetMusicNameTitle(mPosition);
+                musicControl.nextMusic();
+                updateTitle();
             }
         });
 
@@ -144,7 +133,7 @@ public class ListenMusicShowActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 //进度条改变
-                if (fromUser){
+                if (fromUser) {
                     musicControl.seekTo(progress);
                 }
             }
@@ -160,109 +149,57 @@ public class ListenMusicShowActivity extends AppCompatActivity {
             }
         });
 
-        receiver=new MyReceiver();
-        IntentFilter filter=new IntentFilter();
-        filter.addAction("com.ghd.ddmusic.play_style");
-        ListenMusicShowActivity.this.registerReceiver(receiver,filter);
-
-        changePlayStyle = findViewById(R.id.on_off_button);
+        changePlayStyle = findViewById(R.id.play_style);
         changePlayStyle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(play_style == 0){
+                if (service.getPlayStyle() == 0) {
                     changePlayStyle.setImageDrawable(getResources().getDrawable(R.drawable.ic_random));
-                    service.setPlay_style(1);
-                }
-                if (play_style == 1){
+                    service.setPlayStyle(1);
+                } else if (service.getPlayStyle() == 1) {
                     changePlayStyle.setImageDrawable(getResources().getDrawable(R.drawable.ic_list_cir));
-                    service.setPlay_style(2);
-                }
-                if (play_style == 2){
+                    service.setPlayStyle(2);
+                } else if (service.getPlayStyle() == 2) {
                     changePlayStyle.setImageDrawable(getResources().getDrawable(R.drawable.ic_cir));
-                    service.setPlay_style(0);
+                    service.setPlayStyle(0);
                 }
             }
         });
-
-
 
         mImageView = findViewById(R.id.music_image);
 
     }
 
-
-    //更换头部音乐名
-    private void resetMusicNameTitle(int position){
-        Music music = list.get(position);
-        musicNameTextView.setText(music.getMusicName().replaceAll(".mp3", ""));
-        musicDurationTextView.setText(MusicUtils.formatTime(music.getDuration()));
-    }
-
-    //更新上方的文字和下面按钮
-    public void updatePlayText() {
-        ImageButton onOffButton = findViewById(R.id.on_off_button);
-        if (musicControl.isPlaying()) {
+    //下面按钮
+    private void updatePlayBtn() {
+        if (MusicService.mIsplaying) {
             onOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause));
         } else {
             onOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_play));
         }
+
+    }
+    //更新文字
+    private void updateTitle(){
+        Music music = AllMusicActivity.list.get(MusicService.mPosition);
+        musicNameTextView.setText(music.getMusicName().replaceAll(".mp3", ""));
+        musicDurationTextView.setText(MusicUtils.formatTime(music.getDuration()));
     }
 
 
-
-    // 上一曲
-    public void frontMusic(int position) {
-        mPosition = position;
-        mPosition--;
-        if (mPosition < 0) {
-            mPosition = list.size() - 1;
-        }
-        musicControl.play(list.get(mPosition).getPath());
-    }
-
-    // 下一曲
-    public int nextMusic(int position) {
-        mPosition = position;
-        mPosition++;
-        if (mPosition > list.size() - 1) {
-            mPosition = 0;
-        }
-        musicControl.play(list.get(mPosition).getPath());
-        return mPosition;
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
         //进入到界面后开始更新进度条
-        if (musicControl != null){
+        if (musicControl != null) {
             handler.sendEmptyMessage(UPDATE_PROGRESS);
         }
     }
 
-
-
-
     //设置播放顺序
-    public void setPlayStyle(int play_style_0){
-        service.setPlay_style(play_style_0);
-    }
-
-    //单曲循环
-    private void cil_nextMusic(){
-        musicControl.play(list.get(mPosition).getPath());
-    }
-
-    // 随机播放
-    private void random_nextMusic(){
-        mCurrentposition = mPosition + random.nextInt(list.size() - 1);
-        mCurrentposition %= list.size();
-        musicControl.play(list.get(mCurrentposition).getPath());
-    }
-
-    // 顺序播放
-    private void list_cil_nextMusic(){
-        nextMusic(mPosition);
+    public void setPlayStyle(int playStyle) {
+        service.setPlayStyle(playStyle);
     }
 
     @Override
@@ -270,30 +207,20 @@ public class ListenMusicShowActivity extends AppCompatActivity {
         super.onStop();
         //停止更新进度条的进度
         handler.removeCallbacksAndMessages(null);
+        unbindService(conn);
     }
 
     //更新进度条
     private void updateProgress() {
-        int currenPostion = musicControl.getCurrenPostion();
-        mSeekBar.setProgress(currenPostion);
-        musicNowDurationTextView.setText(MusicUtils.formatTime(currenPostion));
+        mCurrenPostion = musicControl.getCurrenPostion();
+        mSeekBar.setProgress(mCurrenPostion);
+        musicNowDurationTextView.setText(MusicUtils.formatTime(mCurrenPostion));
         //使用Handler每500毫秒更新一次进度条
-        handler.sendEmptyMessageDelayed(UPDATE_PROGRESS, 500);
+        handler.sendEmptyMessageDelayed(UPDATE_PROGRESS, 300);
     }
 
-
-    public class MyReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Bundle bundle=intent.getExtras();
-            play_style=bundle.getInt("play_style");
-            switch (play_style) {
-                case 0 : cil_nextMusic();
-                case 1 : random_nextMusic();
-                case 2 : list_cil_nextMusic();
-            }
-        }
+    public void allMusic(View view){
+        finish();
     }
-
 
 }
