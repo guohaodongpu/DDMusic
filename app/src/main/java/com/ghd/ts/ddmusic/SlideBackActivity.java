@@ -49,7 +49,8 @@ public class SlideBackActivity extends AppCompatActivity {
                 //关闭Activity需满足以下条件：
                 //zhao.x轴滑动的距离>XDISTANCE_MIN
                 //zhao1.y轴滑动的距离在YDISTANCE_MIN范围内
-                //zhao3.y轴上（即上下滑动的速度）<XSPEED_MIN，如果大于，则认为用户意图是在上下滑动而非左滑结束Activity
+                //zhao3.y轴上（即上下滑动的速度）<XSPEED_MIN
+                // 如果大于，则认为用户意图是在上下滑动而非左滑结束Activity
 
 
                 if (distanceX > XDISTANCE_MIN && (distanceY < YDISTANCE_MIN && distanceY > -YDISTANCE_MIN) && ySpeed < YSPEED_MIN) {
