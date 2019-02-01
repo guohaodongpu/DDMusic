@@ -7,18 +7,26 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.ghd.ts.ddmusic.View.LrcView;
 import com.ghd.ts.ddmusic.entity.Music;
 import com.ghd.ts.ddmusic.service.MusicService;
 import com.ghd.ts.ddmusic.utils.MusicUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ListenMusicShowActivity extends AppCompatActivity {
 
@@ -35,6 +43,12 @@ public class ListenMusicShowActivity extends AppCompatActivity {
     private MusicService mService = null;
     private static final int UPDATE_PROGRESS = 0;
     private int mCurrenPostion;
+    private View mMusicImageView, mMusicLyricView;
+    private ViewPager mViewPager;
+    private List<View> mViewList;
+    private LrcView mLrcView;
+    private List<String> mLrcList;
+
 
     private ServiceConnection conn = new ServiceConnection() {
         @Override
@@ -76,6 +90,41 @@ public class ListenMusicShowActivity extends AppCompatActivity {
         mMusicNameTextView = findViewById(R.id.top_music_name);
         mMusicDurationTextView = findViewById(R.id.music_duration);
         mMusicNowDurationTextView = findViewById(R.id.now_music_duration);
+
+        mViewPager = findViewById(R.id.music_show_viewpager);
+        LayoutInflater inflater = getLayoutInflater();
+        mMusicImageView = inflater.inflate(R.layout.layout_music_image, null);
+        mMusicLyricView = inflater.inflate(R.layout.layout_music_lyric, null);
+        mViewList = new ArrayList<View>();
+        mViewList.add(mMusicImageView);
+        mViewList.add(mMusicLyricView);
+        PagerAdapter pagerAdapter = new PagerAdapter() {
+
+            @Override
+            public boolean isViewFromObject(View arg0, Object arg1) {
+                // TODO Auto-generated method stub
+                return arg0 == arg1;
+            }
+
+            @Override
+            public int getCount() {
+                // TODO Auto-generated method stub
+                return mViewList.size();
+            }
+
+            @Override
+            public void destroyItem(ViewGroup container, int position,
+                                    Object object) {
+                container.removeView(mViewList.get(position));
+            }
+
+            @Override
+            public Object instantiateItem(ViewGroup container, int position) {
+                container.addView(mViewList.get(position));
+                return mViewList.get(position);
+            }
+        };
+        mViewPager.setAdapter(pagerAdapter);
 
         Intent intent = new Intent(this, MusicService.class);
         bindService(intent, conn, BIND_AUTO_CREATE);
@@ -165,9 +214,11 @@ public class ListenMusicShowActivity extends AppCompatActivity {
             }
         });
 
-        mImageView = findViewById(R.id.music_image);
-
+        mImageView = mMusicImageView.findViewById(R.id.music_image);
+        mLrcView = mMusicLyricView.findViewById(R.id.lrc_view);
         handler.sendEmptyMessage(UPDATE_PROGRESS);
+
+        mLrcView.init();
     }
 
     //下面按钮
@@ -188,6 +239,54 @@ public class ListenMusicShowActivity extends AppCompatActivity {
         mMusicDurationTextView.setText(MusicUtils.formatTime(music.getDuration()));
     }
 
+    //updatelyric
+    private void updateLyric() {
+        mLrcView.setLrc("[00:02.03]十年\n" +
+                "[00:04.77]演唱：陈奕迅\n" +
+                "[00:06.18]\n" +
+                "[00:15.42]如果那两个字没有颤抖\n" +
+                "[00:19.68]我不会发现 我难受\n" +
+                "[00:23.09]怎么说出口\n" +
+                "[00:26.58]也不过是分手\n" +
+                "[00:31.18]如果对于明天没有要求\n" +
+                "[00:35.24]牵牵手就像旅游\n" +
+                "[00:38.30]成千上万个门口\n" +
+                "[00:42.22]总有一个人要先走\n" +
+                "[00:47.81]怀抱既然不能逗留\n" +
+                "[00:51.23]何不在离开的时候\n" +
+                "[00:54.11]一边享受 一边泪流\n" +
+                "[01:01.34]十年之前\n" +
+                "[01:03.35]我不认识你 你不属于我\n" +
+                "[01:07.01]我们还是一样\n" +
+                "[01:09.54]陪在一个陌生人左右\n" +
+                "[01:13.48]走过渐渐熟悉的街头\n" +
+                "[01:16.81]十年之后\n" +
+                "[01:18.82]我们是朋友 还可以问候\n" +
+                "[01:22.54]只是那种温柔\n" +
+                "[01:25.08]再也找不到拥抱的理由\n" +
+                "[01:28.89]情人最后难免沦为朋友\n" +
+                "[01:35.50]\n" +
+                "[01:57.73]怀抱既然不能逗留\n" +
+                "[02:00.87]何不在离开的时候\n" +
+                "[02:03.81]一边享受 一边泪流\n" +
+                "[02:11.03]十年之前\n" +
+                "[02:12.91]我不认识你 你不属于我\n" +
+                "[02:16.73]我们还是一样\n" +
+                "[02:19.30]陪在一个陌生人左右\n" +
+                "[02:23.08]走过渐渐熟悉的街头\n" +
+                "[02:26.39]十年之后\n" +
+                "[02:28.50]我们是朋友 还可以问候\n" +
+                "[02:32.13]只是那种温柔\n" +
+                "[02:34.67]再也找不到拥抱的理由\n" +
+                "[02:38.51]情人最后难免沦为朋友\n" +
+                "[02:48.59]直到和你做了多年朋友\n" +
+                "[02:52.80]才明白我的眼泪\n" +
+                "[02:55.65]不是为你而流\n" +
+                "[02:59.46]也为别人而流\n" +
+                "[03:03.39]");
+        mMusicControl.setPlayer(mLrcView);
+
+    }
 
     @Override
     protected void onResume() {
@@ -219,6 +318,7 @@ public class ListenMusicShowActivity extends AppCompatActivity {
         updateTitle();
         mSeekBar.setMax(mMusicControl.getDuration());
         mSeekBar.setProgress(mMusicControl.getCurrenPostion());
+        updateLyric();
         //使用Handler每500毫秒更新一次进度条
         handler.sendEmptyMessageDelayed(UPDATE_PROGRESS, 300);
     }
@@ -237,7 +337,6 @@ public class ListenMusicShowActivity extends AppCompatActivity {
             mChangePlayStyle.setImageDrawable(getResources().getDrawable(R.drawable.ic_list_cir));
         }
         updateMusicImageViewRotate();
-
     }
 
     public void updateMusicImageViewRotate() {

@@ -6,13 +6,16 @@ import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.View;
 
 import com.ghd.ts.ddmusic.AllMusicActivity;
+import com.ghd.ts.ddmusic.View.LrcView;
 import com.ghd.ts.ddmusic.entity.Music;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class MusicService extends Service {
 
@@ -83,6 +86,10 @@ public class MusicService extends Service {
 
         public MusicService getMusicService() {
             return MusicService.this;
+        }
+
+        public void setPlayer(LrcView mLrcView){
+            mLrcView.setPlayer(mPlayer);
         }
 
         //判断是否处于播放状态

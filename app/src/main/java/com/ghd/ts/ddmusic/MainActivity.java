@@ -234,7 +234,7 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }break;
             case R.id.center_download_music : {
-                Intent intent = new Intent(MainActivity.this, Main2Activity.class);
+                Intent intent = new Intent(MainActivity.this, AllMusicActivity.class);
                 startActivity(intent);
             }break;
             case R.id.center_recently_played : {
