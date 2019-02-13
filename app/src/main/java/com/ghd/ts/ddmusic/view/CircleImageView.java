@@ -1,4 +1,4 @@
-package com.ghd.ts.ddmusic.View;
+package com.ghd.ts.ddmusic.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;

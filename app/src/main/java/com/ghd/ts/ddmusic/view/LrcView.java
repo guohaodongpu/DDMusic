@@ -1,4 +1,4 @@
-package com.ghd.ts.ddmusic.View;
+package com.ghd.ts.ddmusic.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -183,4 +183,9 @@ public class LrcView extends View {
             postInvalidateDelayed(100);
         }
     }
+
+
+
+
+
 }

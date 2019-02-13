@@ -7,7 +7,7 @@
     android:paddingTop="3dp"
     android:paddingBottom="3dp">
 
-    <com.ghd.ts.ddmusic.View.CircleImageView
+    <com.ghd.ts.ddmusic.view.CircleImageView
         android:id="@+id/buttom_music_image"
         android:layout_width="50dp"
         android:layout_height="50dp"

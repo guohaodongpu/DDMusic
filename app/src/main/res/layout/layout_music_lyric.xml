@@ -7,7 +7,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.ghd.ts.ddmusic.View.LrcView
+    <com.ghd.ts.ddmusic.view.LrcView
         android:id="@+id/lrc_view"
         android:layout_width="match_parent"
         app:lrcMode="KARAOKE"

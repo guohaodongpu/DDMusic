@@ -5,17 +5,14 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
-import android.view.View;
 
 import com.ghd.ts.ddmusic.AllMusicActivity;
-import com.ghd.ts.ddmusic.View.LrcView;
+import com.ghd.ts.ddmusic.view.LrcView;
 import com.ghd.ts.ddmusic.entity.Music;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 public class MusicService extends Service {
 

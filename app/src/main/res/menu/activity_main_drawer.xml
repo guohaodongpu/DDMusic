@@ -2,36 +2,30 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
+    <item android:title="个性设置">
+        <menu>
+            <item android:title="个性装扮" />
+            <item android:title="消息中心" />
+            <item android:title="免流量服务" />
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
-    </group>
+            <item android:title="清理占用空间" />
+            <item android:title="帮助与反馈" />
+            <item android:title="关于QQ音乐" />
 
-    <item android:title="Communicate">
+            <item android:title="精品应用推荐" />
+        </menu>
+    </item>
+    
+    <item android:title="系统选项">
         <menu>
             <item
                 android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:icon="@drawable/ic_menu_manage"
+                android:title="设置" />
             <item
                 android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:icon="@drawable/ic_menu_close"
+                android:title="关闭" />
         </menu>
     </item>
 
