@@ -39,11 +39,12 @@
             android:layout_gravity="right" />
 
         <ImageView
-            android:layout_width="12dp"
-            android:layout_height="12dp"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
             android:layout_gravity="right"
             android:layout_marginTop="5dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_download" />
+            android:backgroundTint="@color/colorPrimary"
+            android:background="@drawable/ic_already_download"/>
     </LinearLayout>
 </LinearLayout>

@@ -1,12 +1,21 @@
 package com.ghd.ts.ddmusic;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.text.TextPaint;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -18,20 +27,32 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.ghd.ts.ddmusic.adapter.GlideImageLoader;
 import com.ghd.ts.ddmusic.adapter.MainAdapter;
 import com.ghd.ts.ddmusic.adapter.MusicListAdapter;
-import com.ghd.ts.ddmusic.entity.MusicList;
+import com.ghd.ts.ddmusic.dao.MusicListDao;
+import com.ghd.ts.ddmusic.entity.Music;
+import com.ghd.ts.ddmusic.entity.SongSheet;
 import com.ghd.ts.ddmusic.fragment.MainFindFragment;
 import com.ghd.ts.ddmusic.fragment.MainMineFragment;
 import com.ghd.ts.ddmusic.fragment.MainMusicFragment;
+import com.ghd.ts.ddmusic.service.MusicService;
 import com.ghd.ts.ddmusic.utils.MusicUtils;
+import com.youth.banner.Banner;
+import com.youth.banner.BannerConfig;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +82,18 @@ public class MainActivity extends AppCompatActivity
     private int mPreviousSelectedPosition = 0;
     boolean isRunning = false;
     private boolean mCanExcute = false;
+
+    private MusicService.MusicBinder mMusicControl;
+    private MusicService mService = null;
+    private static final int UPDATE_PROGRESS = 0;
+    private int mCurrenPostion;
+    private SeekBar mSeekBar;
+    private ImageView mImageView;
+    private boolean isBound = false;
+    private MusicListDao mMusicListDao;
+    private String mMusicName;
+
+    private Banner banner;
 
     private void findById() {
         mTabMineTv = this.findViewById(R.id.top_mine);
@@ -133,18 +166,25 @@ public class MainActivity extends AppCompatActivity
                 resetTextView();
                 switch (position) {
                     case 0:
-                        mTabMineTv.setTextColor(Color.WHITE);
+                        resetTextView();
+                        mTabMineTv.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                        mTabMineTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                         break;
                     case 1:
                         initViews();
-                        if(!mCanExcute){
+                        if (!mCanExcute) {
                             initLibrary();
                             mCanExcute = true;
                         }
-                        mTabMusicTv.setTextColor(Color.WHITE);
+                        resetTextView();
+                        mTabMusicTv.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                        mTabMusicTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                         break;
                     case 2:
-                        mTabFindTv.setTextColor(Color.WHITE);
+                        initBanner();
+                        resetTextView();
+                        mTabFindTv.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                        mTabFindTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                         break;
                 }
                 mCurrentIndex = position;
@@ -165,12 +205,42 @@ public class MainActivity extends AppCompatActivity
     }*/
 
     private void resetTextView() {
-        mTabMineTv.setTextColor(Color.BLACK);
-        mTabMusicTv.setTextColor(Color.BLACK);
-        mTabFindTv.setTextColor(Color.BLACK);
+        mTabMineTv.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+        mTabMineTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
+        mTabMusicTv.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+        mTabMusicTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
+        mTabFindTv.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+        mTabFindTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
     }
 
-    private List<MusicList> mMusicListList = new ArrayList<>();
+    private List<SongSheet> mMusicListList = new ArrayList<>();
+
+    private ServiceConnection conn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder binder) {
+            isBound = true;
+            mMusicControl = (MusicService.MusicBinder) binder;
+            mService = mMusicControl.getMusicService();
+            updatePlayText();
+            updateTitle();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            isBound = false;
+        }
+    };
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case UPDATE_PROGRESS:
+                    updateProgress();
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,6 +248,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mMusicListDao = new MusicListDao(this);
+        Intent intent = new Intent(this, MusicService.class);
+        bindService(intent, conn, BIND_AUTO_CREATE);
         mDrawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -223,7 +296,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 resetTextView();
-                mTabMineTv.setTextColor(Color.WHITE);
+                mTabMineTv.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                mTabMineTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                 mPageVp.setCurrentItem(0);
             }
         });
@@ -233,11 +307,12 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 resetTextView();
                 initViews();
-                if(!mCanExcute){
+                if (!mCanExcute) {
                     initLibrary();
                     mCanExcute = true;
                 }
-                mTabMineTv.setTextColor(Color.WHITE);
+                mTabMusicTv.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                mTabMusicTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                 mPageVp.setCurrentItem(1);
             }
         });
@@ -246,8 +321,10 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 resetTextView();
-                mTabMineTv.setTextColor(Color.WHITE);
+                mTabFindTv.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                mTabFindTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                 mPageVp.setCurrentItem(2);
+                initBanner();
             }
         });
 
@@ -259,8 +336,60 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        mOnOffButton = findViewById(R.id.on_off_button);
+        mOnOffButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (MusicService.mIsplaying) {
+                    mOnOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_play));
+                    mMusicControl.pause();
+                } else {
+                    mOnOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause));
+                    mMusicControl.playContinue();
+
+                }
+                updateMusicImageViewRotate();
+            }
+        });
+
+        mMusicNameTextView = findViewById(R.id.music_name_show);
+        mSeekBar = findViewById(R.id.bottom_seekBar);
+        mImageView = findViewById(R.id.buttom_music_image);
+        ImageButton lastMusicButton = findViewById(R.id.last_music);
+        lastMusicButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                mMusicControl.lastMusic();
+                updateTitle();
+            }
+        });
+        ImageButton nextMusicButton = findViewById(R.id.next_music);
+        nextMusicButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMusicControl.nextMusic();
+                updateTitle();
+            }
+        });
+
+        int []data = load();
+        mSeekBar.setMax(data[2]);
+        mSeekBar.setProgress(data[1]);
+        MusicService.mPosition = data[0];
+//        mMusicControl.seekTo(data[1]);
+
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mMusicControl != null) {
+            mService = mMusicControl.getMusicService();
+            handler.sendEmptyMessage(UPDATE_PROGRESS);
+            updatePlayText();
+            updateTitle();
+        }
+        updateMusicImageViewRotate();
+    }
 
     @Override
     public void onBackPressed() {
@@ -294,17 +423,10 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_close) {
+            moveTaskToBack(true);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -378,6 +500,28 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    private void initBanner() {
+
+        List<Integer> images = new ArrayList<>();
+        images.add(R.drawable.a);
+        images.add(R.drawable.b);
+        images.add(R.drawable.c);
+
+        banner = findViewById(R.id.banner);
+        //设置banner样式
+        banner.setBannerStyle(BannerConfig.NUM_INDICATOR);
+        //设置图片加载器
+        banner.setImageLoader(new GlideImageLoader());
+        //设置图片集合
+        banner.setImages(images);
+        //设置轮播时间
+        banner.setDelayTime(2000);
+        //banner设置方法全部调用完毕时最后调用
+        banner.start();
+
+    }
+
+
     private void initViews() {
         mLibraryViewPager = findViewById(R.id.top_music_library_viewpager);
         //mLibraryViewPager.setOnPageChangeListener(MainActivity.this);// 设置页面更新监听
@@ -413,12 +557,12 @@ public class MainActivity extends AppCompatActivity
             // 加小白点, 指示器
             pointView = new View(this);
             pointView.setBackgroundResource(R.drawable.gray_dot);
-            layoutParams = new LinearLayout.LayoutParams(10, 10);
-            if (i==0){
+            layoutParams = new LinearLayout.LayoutParams(15, 15);
+            if (i == 0) {
                 imageView.setBackgroundResource(R.drawable.a);
-            }else{
+            } else {
                 imageView.setEnabled(false);
-                layoutParams.leftMargin=12;
+                layoutParams.leftMargin = 20;
             }
             mLlPointContainer.addView(pointView, layoutParams);
         }
@@ -464,10 +608,79 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    //更新下方的按钮
+    public void updatePlayText() {
+        if (MusicService.mIsplaying) {
+            mOnOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause));
+        } else {
+            mOnOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_play));
+        }
+    }
+
+    //更新进度条
+    private void updateProgress() {
+        mCurrenPostion = mMusicControl.getCurrenPostion();
+        mSeekBar.setMax(mMusicControl.getDuration());
+        mSeekBar.setProgress(mMusicControl.getCurrenPostion());
+        mSeekBar.setProgress(mCurrenPostion);
+        handler.sendEmptyMessageDelayed(UPDATE_PROGRESS, 300);
+    }
+
+    //图片旋转
+    public void updateMusicImageViewRotate() {
+        if (!MusicService.mIsplaying) {
+            mImageView.clearAnimation();
+        } else {
+            mImageView.startAnimation(AnimationUtils.loadAnimation(
+                    MainActivity.this, R.anim.imageview_rotate));
+        }
+    }
+
+    //更新文字
+    private void updateTitle() {
+        Music music = mMusicListDao.select().get(MusicService.mPosition);
+        mMusicName = music.getMusicName().replaceAll(".mp3", "");
+        Log.d("mMusicName", mMusicName);
+        mMusicNameTextView.setText(music.getSinger() + "-" + mMusicName);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         isRunning = false;
+        unbindService(conn);
     }
+
+    private int[] load() {
+        int[] data = {0,0,0};
+        FileInputStream in = null;
+        BufferedReader reader = null;
+        StringBuilder content = new StringBuilder();
+        try {
+            in = openFileInput("data");
+            reader = new BufferedReader(new InputStreamReader(in));
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                content.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        String[] datas = content.toString().split(",");
+        for (int i = 0; i < datas.length; i++) {
+            data[i] = Integer.valueOf(datas[i]);
+        }
+
+        return data;
+    }
+
 
 }

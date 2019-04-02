@@ -1,18 +1,25 @@
 package com.ghd.ts.ddmusic.service;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
 
 import com.ghd.ts.ddmusic.AllMusicActivity;
+import com.ghd.ts.ddmusic.dao.MusicListDao;
 import com.ghd.ts.ddmusic.view.LrcView;
 import com.ghd.ts.ddmusic.entity.Music;
 
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MusicService extends Service {
 
@@ -23,7 +30,7 @@ public class MusicService extends Service {
     private Random mRandom;
     public static boolean mIsplaying;
     private static Music mMusic;
-
+    private MusicListDao mMusicListDao;
 
     public MusicService() {
 
@@ -35,6 +42,29 @@ public class MusicService extends Service {
 
     public void setPosition(int position) {
         this.mPosition = position;
+        saveNow(position);
+    }
+
+    private void saveNow(int position) {
+        FileOutputStream outputStream = null;
+        BufferedWriter writer = null;
+        try {
+            outputStream = openFileOutput("data", Context.MODE_PRIVATE);
+            writer = new BufferedWriter(new OutputStreamWriter(outputStream));
+            writer.write(String.valueOf(position)
+                    +","+String.valueOf(mPlayer.getCurrentPosition())
+                    +","+String.valueOf(mPlayer.getDuration()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void setPlayStyle(int playStyle) {
@@ -52,7 +82,8 @@ public class MusicService extends Service {
     public void onCreate() {
         super.onCreate();
         mPlayer = new MediaPlayer();
-        mMusicList = AllMusicActivity.mList;
+        mMusicListDao = new MusicListDao(this);
+        mMusicList = mMusicListDao.select();
         mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
@@ -71,7 +102,16 @@ public class MusicService extends Service {
                 }
             }
         });
+        /*Timer timer= new Timer();
+        timer.schedule(task, 100,300);*/
     }
+
+    TimerTask task= new TimerTask() {
+        @Override
+        public void run() {
+            saveNow(getPosition());
+        }
+    };
 
 
     @Override
@@ -85,7 +125,7 @@ public class MusicService extends Service {
             return MusicService.this;
         }
 
-        public void setPlayer(LrcView mLrcView){
+        public void setPlayer(LrcView mLrcView) {
             mLrcView.setPlayer(mPlayer);
         }
 

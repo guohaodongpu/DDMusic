@@ -9,9 +9,13 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -19,7 +23,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.ghd.ts.ddmusic.dao.MusicListDao;
 import com.ghd.ts.ddmusic.view.LrcView;
 import com.ghd.ts.ddmusic.entity.Music;
 import com.ghd.ts.ddmusic.service.MusicService;
@@ -32,6 +38,7 @@ public class ListenMusicShowActivity extends AppCompatActivity {
 
     private int mPosition;
     private TextView mMusicNameTextView;
+    private TextView mMusicSingerNameTextView;
     private TextView mMusicDurationTextView;
     private TextView mMusicNowDurationTextView;
     private ImageView mImageView;
@@ -48,7 +55,7 @@ public class ListenMusicShowActivity extends AppCompatActivity {
     private List<View> mViewList;
     private LrcView mLrcView;
     private List<String> mLrcList;
-
+    private MusicListDao mMusicListDao;
 
     private ServiceConnection conn = new ServiceConnection() {
         @Override
@@ -86,15 +93,19 @@ public class ListenMusicShowActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listen_music_show);
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        mMusicListDao = new MusicListDao(this);
         mMusicNameTextView = findViewById(R.id.top_music_name);
+        mMusicSingerNameTextView = findViewById(R.id.top_music_singer_name);
         mMusicDurationTextView = findViewById(R.id.music_duration);
         mMusicNowDurationTextView = findViewById(R.id.now_music_duration);
 
         mViewPager = findViewById(R.id.music_show_viewpager);
         LayoutInflater inflater = getLayoutInflater();
-        mMusicImageView = inflater.inflate(R.layout.layout_music_image, null);
-        mMusicLyricView = inflater.inflate(R.layout.layout_music_lyric, null);
+        mMusicImageView = inflater.inflate(R.layout.layout_music_show_image, null);
+        mMusicLyricView = inflater.inflate(R.layout.layout_music_show_lyric, null);
         mViewList = new ArrayList<View>();
         mViewList.add(mMusicImageView);
         mViewList.add(mMusicLyricView);
@@ -129,8 +140,7 @@ public class ListenMusicShowActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MusicService.class);
         bindService(intent, conn, BIND_AUTO_CREATE);
 
-        mMusicDurationTextView.setText(MusicUtils.formatTime(AllMusicActivity
-                .mList.get(MusicService.mPosition).getDuration()));
+        mMusicDurationTextView.setText(MusicUtils.formatTime(mMusicListDao.select().get(MusicService.mPosition).getDuration()));
 
         mOnOffButton = findViewById(R.id.music_list_on_off);
         mOnOffButton.setOnClickListener(new View.OnClickListener() {
@@ -144,14 +154,6 @@ public class ListenMusicShowActivity extends AppCompatActivity {
                     mOnOffButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause));
                 }
                 updateMusicImageViewRotate();
-            }
-        });
-
-        ImageButton blackButton = findViewById(R.id.black_button);
-        blackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
             }
         });
 
@@ -221,6 +223,14 @@ public class ListenMusicShowActivity extends AppCompatActivity {
         mLrcView.init();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_listen_music_show, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
     //下面按钮
     private void updatePlayBtn() {
         if (MusicService.mIsplaying) {
@@ -233,15 +243,15 @@ public class ListenMusicShowActivity extends AppCompatActivity {
 
     //更新文字
     private void updateTitle() {
-        Music music = AllMusicActivity.mList.get(MusicService.mPosition);
-        mMusicNameTextView.setText(music.getSinger() + "-" +
-                music.getMusicName().replaceAll(".mp3", ""));
+        Music music = mMusicListDao.select().get(MusicService.mPosition);
+        mMusicNameTextView.setText(music.getMusicName().replaceAll(".mp3", ""));
+        mMusicSingerNameTextView.setText("—"+music.getSinger()+"—");
         mMusicDurationTextView.setText(MusicUtils.formatTime(music.getDuration()));
     }
 
     //updatelyric
     private void updateLyric() {
-        mLrcView.setLrc("[ti:想哭][ar:陈奕迅][al:special thanks to][by:昨夜星辰昨夜风]\n" +
+        /*mLrcView.setLrc("[ti:想哭][ar:陈奕迅][al:special thanks to][by:昨夜星辰昨夜风]\n" +
                 "[00:03.11]陈奕迅： 想哭\n" +
                 "[00:05.07]作词：林夕　作曲：徐伟贤　编曲：Jim Lee\n" +
                 "[00:06.16]\n" +
@@ -294,8 +304,8 @@ public class ListenMusicShowActivity extends AppCompatActivity {
                 "[02:00.84]当我想坦白我们的乐多于苦\n" +
                 "[02:08.52]你说水星它没有卫星　好孤独\n" +
                 "[02:16.02]我才明白时间较分手还　残酷\n" +
-                "[02:23.89]老朋友了　再没资格不满足");
-        /*mLrcView.setLrc("[00:02.03]十年\n" +
+                "[02:23.89]老朋友了　再没资格不满足");*/
+        mLrcView.setLrc("[00:02.03]十年\n" +
                 "[00:04.77]演唱：陈奕迅\n" +
                 "[00:06.18]\n" +
                 "[00:15.42]如果那两个字没有颤抖\n" +
@@ -337,7 +347,7 @@ public class ListenMusicShowActivity extends AppCompatActivity {
                 "[02:52.80]才明白我的眼泪\n" +
                 "[02:55.65]不是为你而流\n" +
                 "[02:59.46]也为别人而流\n" +
-                "[03:03.39]");*/
+                "[03:03.39]");
         mMusicControl.setPlayer(mLrcView);
 
     }
@@ -361,7 +371,6 @@ public class ListenMusicShowActivity extends AppCompatActivity {
         super.onStop();
         //停止更新进度条的进度
         handler.removeCallbacksAndMessages(null);
-        unbindService(conn);
     }
 
     //更新进度条
@@ -405,5 +414,17 @@ public class ListenMusicShowActivity extends AppCompatActivity {
     public void allMusic(View view) {
         finish();
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
 }

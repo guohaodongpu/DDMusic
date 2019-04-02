@@ -3,51 +3,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-    <LinearLayout
+    <TextView
+        android:id="@+id/top_music_name"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/colorPrimary"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:gravity="center"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/black_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@android:color/transparent"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_back" />
-
-        <TextView
-            android:id="@+id/top_music_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="当前没有播放歌曲"
-            android:textColor="#ffffff"
-            android:textSize="20dp"
-            android:textStyle="bold" />
-
-        <ImageButton
-            android:id="@+id/open_music_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@android:color/transparent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ddd" />
-
-    </LinearLayout>
-
+        android:text="当前没有播放歌曲"
+        android:textColor="#000"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp"/>
+    <TextView
+        android:id="@+id/top_music_singer_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="-- 歌手名 --"
+        android:textColor="#000"
+        android:textSize="10sp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="5dp"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/music_show_viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:gravity="center">
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_gravity="center">
 
     </android.support.v4.view.ViewPager>
 
@@ -64,26 +48,25 @@
             android:id="@+id/now_music_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
             android:text="00:00"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textSize="16sp"/>
 
         <SeekBar
             android:id="@+id/seekBar"
-            android:layout_width="250dp"
+            android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:thumbTint="@color/green"
             android:thumb="@drawable/ic_seekbar_bt" />
 
         <TextView
             android:id="@+id/music_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="2dp"
+            android:layout_marginLeft="2dp"
             android:text="00:00"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textSize="16sp" />
     </LinearLayout>
 
 
@@ -91,8 +74,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="8dp"
         android:layout_weight="1"
         android:gravity="center">
 
@@ -100,7 +83,8 @@
             android:id="@+id/play_style"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:layout_margin="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="15dp"
             android:background="@android:color/transparent"
             android:foreground="?android:attr/selectableItemBackground"
             android:scaleType="centerCrop"
@@ -110,7 +94,8 @@
             android:id="@+id/last_music"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_margin="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:background="@android:color/transparent"
             android:foreground="?android:attr/selectableItemBackground"
             android:scaleType="centerCrop"
@@ -120,7 +105,8 @@
             android:id="@+id/music_list_on_off"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_margin="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:background="@android:color/transparent"
             android:foreground="?android:attr/selectableItemBackground"
             android:scaleType="centerCrop"
@@ -130,7 +116,8 @@
             android:id="@+id/next_music"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_margin="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:background="@android:color/transparent"
             android:foreground="?android:attr/selectableItemBackground"
             android:scaleType="centerCrop"
@@ -140,7 +127,8 @@
             android:id="@+id/all_music"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:layout_margin="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="5dp"
             android:background="@android:color/transparent"
             android:foreground="?android:attr/selectableItemBackground"
             android:onClick="allMusic"
@@ -148,5 +136,56 @@
             android:src="@drawable/music_list" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginBottom="10dp"
+        android:layout_weight="1">
+
+        <ImageButton
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginLeft="25dp"
+            android:background="@android:color/transparent"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:scaleType="centerCrop"
+            android:src="@drawable/like" />
+
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginLeft="25dp"
+            android:background="@android:color/transparent"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_download" />
+
+        <ImageButton
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginLeft="25dp"
+            android:background="@android:color/transparent"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_share" />
+
+        <ImageButton
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginLeft="25dp"
+            android:background="@android:color/transparent"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_comment" />
+
+
+    </LinearLayout>
+
 
 </LinearLayout>

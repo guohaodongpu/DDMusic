@@ -14,6 +14,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -25,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ghd.ts.ddmusic.adapter.MusicAdapter;
+import com.ghd.ts.ddmusic.dao.MusicListDao;
 import com.ghd.ts.ddmusic.entity.Music;
 import com.ghd.ts.ddmusic.service.MusicService;
 import com.ghd.ts.ddmusic.utils.MusicUtils;
@@ -33,7 +39,7 @@ import java.util.ArrayList;
 
 public class AllMusicActivity extends SlideBackActivity {
 
-    public static ArrayList<Music> mList;
+    private ArrayList<Music> mList;
     private String mMusicName;
     private MusicService.MusicBinder mMusicControl;
     private ImageButton mOnOffButton;
@@ -46,7 +52,8 @@ public class AllMusicActivity extends SlideBackActivity {
     private static final int UPDATE_PROGRESS = 0;
     private int mCurrenPostion;
     private SeekBar mSeekBar;
-
+    private int mPosition;
+    private MusicListDao mMusicListDao;
 
     /*
         private List<Fragment> mFragmentList = new ArrayList<Fragment>();
@@ -128,7 +135,11 @@ public class AllMusicActivity extends SlideBackActivity {
             isBound = true;
             mMusicControl = (MusicService.MusicBinder) binder;
             mService = mMusicControl.getMusicService();
+            mPosition = MusicService.mPosition;
+            mSeekBar.setMax(mMusicControl.getDuration());
+            mSeekBar.setProgress(mMusicControl.getCurrenPostion());
             updatePlayText();
+            updateTitle();
         }
 
         @Override
@@ -139,25 +150,31 @@ public class AllMusicActivity extends SlideBackActivity {
 
 
     private void initList() {
-        mList = MusicUtils.getMusicData(AllMusicActivity.this);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_all_music);
         if (ContextCompat.checkSelfPermission(AllMusicActivity.this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(AllMusicActivity.this, new String[]{
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         } else {
-            initList();
+            mList = mMusicListDao.select();
         }
 
-        ActionBar actionBar = getSupportActionBar();
+
+    }
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_all_music);
+        mMusicListDao = new MusicListDao(this);
+        initList();
+        /*ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
-        }
+        }*/
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
 //        findById();
 //        init();
         mOnOffButton = findViewById(R.id.on_off_button);
@@ -170,6 +187,7 @@ public class AllMusicActivity extends SlideBackActivity {
         bindService(intent, conn, BIND_AUTO_CREATE);
 
         MusicAdapter adapter = new MusicAdapter(AllMusicActivity.this, mList);
+        mMusicNameTextView = findViewById(R.id.music_name_show);
         ListView listView = findViewById(R.id.all_music_list_item);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -177,7 +195,6 @@ public class AllMusicActivity extends SlideBackActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mMusicControl.play(position);
                 updatePlayText();
-                mMusicNameTextView = findViewById(R.id.music_name_show);
                 Music music = mList.get(position);
                 mMusicName = music.getMusicName().replaceAll(".mp3", "");
                 mMusicNameTextView.setText(music.getSinger() + "-" + mMusicName);
@@ -199,14 +216,14 @@ public class AllMusicActivity extends SlideBackActivity {
                 startActivity(intent);
             }
         });
-
+/*
         ImageButton blackButton = findViewById(R.id.black_button);
         blackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
-        });
+        });*/
 
         final ImageButton onOffButton = findViewById(R.id.on_off_button);
         onOffButton.setOnClickListener(new View.OnClickListener() {
@@ -246,8 +263,20 @@ public class AllMusicActivity extends SlideBackActivity {
         mImageView = findViewById(R.id.buttom_music_image);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mMusicControl != null) {
+            handler.sendEmptyMessage(UPDATE_PROGRESS);
+            updatePlayText();
+            updateTitle();
+        }
+        updateMusicImageViewRotate();
+    }
+
+
     private void updateTitle() {
-        Music music = AllMusicActivity.mList.get(MusicService.mPosition);
+        Music music = mList.get(MusicService.mPosition);
         mMusicName = music.getMusicName().replaceAll(".mp3", "");
         mMusicNameTextView.setText(music.getSinger() + "-" + mMusicName);
     }
@@ -262,7 +291,8 @@ public class AllMusicActivity extends SlideBackActivity {
                     initList();
                 } else {
                     Toast.makeText(this, "权限不足", Toast.LENGTH_LONG).show();
-                    finish();
+//                    finish();
+                    moveTaskToBack(true);
                 }
                 break;
             default:
@@ -296,6 +326,8 @@ public class AllMusicActivity extends SlideBackActivity {
     //更新进度条
     private void updateProgress() {
         mCurrenPostion = mMusicControl.getCurrenPostion();
+        mSeekBar.setMax(mMusicControl.getDuration());
+        mSeekBar.setProgress(mMusicControl.getCurrenPostion());
         mSeekBar.setProgress(mCurrenPostion);
         //使用Handler每500毫秒更新一次进度条
         handler.sendEmptyMessageDelayed(UPDATE_PROGRESS, 300);
@@ -307,14 +339,13 @@ public class AllMusicActivity extends SlideBackActivity {
 
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        if (mMusicControl != null) {
-            handler.sendEmptyMessage(UPDATE_PROGRESS);
-            updatePlayText();
-        }
-        updateMusicImageViewRotate();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_all_music, menu);
+
+        return super.onCreateOptionsMenu(menu);
     }
+
 
 
     public void updateMusicImageViewRotate() {
@@ -330,8 +361,42 @@ public class AllMusicActivity extends SlideBackActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //退出应用后与service解除绑定
         unbindService(conn);
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            moveTaskToBack(true);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.update_music:
+                updateMusicList();
+                Toast.makeText(this, "更新本地音乐成功！", Toast.LENGTH_SHORT).show();
+                return true;
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void updateMusicList() {
+        ArrayList<Music> musicArrayList = new ArrayList<Music>();
+        musicArrayList = MusicUtils.getMusicData(AllMusicActivity.this);
+        Log.d("musicArrayList.size", String.valueOf(musicArrayList.size()));
+        mMusicListDao.deleteAll();
+        if (musicArrayList.size() != 0) {
+            for (int i = 0; i < musicArrayList.size(); i++) {
+                mMusicListDao.add(musicArrayList.get(i));
+            }
+        }
+    }
 }

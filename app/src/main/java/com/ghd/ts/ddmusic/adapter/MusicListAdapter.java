@@ -9,15 +9,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ghd.ts.ddmusic.R;
-import com.ghd.ts.ddmusic.entity.MusicList;
+import com.ghd.ts.ddmusic.entity.SongSheet;
 
 import java.util.List;
 
-public class MusicListAdapter extends ArrayAdapter<MusicList> {
+public class MusicListAdapter extends ArrayAdapter<SongSheet> {
 
     private int mResourceId;
 
-    public MusicListAdapter(Context context, int textViewResourceId, List<MusicList> objecets) {
+    public MusicListAdapter(Context context, int textViewResourceId, List<SongSheet> objecets) {
 
         super(context, textViewResourceId, objecets);
         mResourceId = textViewResourceId;
@@ -25,7 +25,7 @@ public class MusicListAdapter extends ArrayAdapter<MusicList> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        MusicList musicList = getItem(position);
+        SongSheet musicList = getItem(position);
         View view = LayoutInflater.from(getContext()).inflate(mResourceId,
                 parent, false);
         ImageView musicListImage = view.findViewById(R.id.music_list_image);

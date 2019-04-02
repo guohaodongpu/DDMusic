@@ -1,6 +1,6 @@
 package com.ghd.ts.ddmusic.entity;
 
-public class MusicList {
+public class SongSheet {
 
     private String mName;
 
@@ -8,7 +8,7 @@ public class MusicList {
 
     private int mImageId;
 
-    public MusicList(String name, String description, int imageId) {
+    public SongSheet(String name, String description, int imageId) {
         this.mName = name;
         this.mDescription = description;
         this.mImageId = imageId;

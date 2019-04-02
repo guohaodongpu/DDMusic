@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/back"
-        android:icon="@drawable/ic_back"
-        android:title="返回"
-        app:showAsAction="always" />
     <!--  <item
           android:id="@+id/more"
           android:icon="@drawable/ic_more"
@@ -15,6 +10,7 @@
     <item
         android:id="@+id/update_music"
         android:icon="@drawable/ic_more"
+        app:showAsAction="never"
         android:title="更新音乐库" />
 
 

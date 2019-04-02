@@ -545,7 +545,8 @@
             android:orientation="vertical">
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="160dp">
+                android:layout_height="160dp"
+                android:padding="3dp">
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
