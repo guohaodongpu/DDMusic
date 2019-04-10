@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListenMusicShowActivity extends AppCompatActivity {
-
+    //ss
     private int mPosition;
     private TextView mMusicNameTextView;
     private TextView mMusicSingerNameTextView;
