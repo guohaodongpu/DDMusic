@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListenMusicShowActivity extends AppCompatActivity {
-    
+
     private int mPosition;
     private TextView mMusicNameTextView;
     private TextView mMusicSingerNameTextView;
@@ -67,7 +67,9 @@ public class ListenMusicShowActivity extends AppCompatActivity {
             mSeekBar.setMax(mMusicControl.getDuration());
             mSeekBar.setProgress(mMusicControl.getCurrenPostion());
             updatePlayBtn();
-            updateTitle();
+            if (MusicService.mPosition != -1) {
+                updateTitle();
+            }
         }
 
         @Override
@@ -82,7 +84,9 @@ public class ListenMusicShowActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case UPDATE_PROGRESS:
-                    updateProgress();
+                    if (MusicService.mPosition != -1) {
+                        updateProgress();
+                    }
                     break;
             }
         }
@@ -139,8 +143,9 @@ public class ListenMusicShowActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, MusicService.class);
         bindService(intent, conn, BIND_AUTO_CREATE);
-
-        mMusicDurationTextView.setText(MusicUtils.formatTime(mMusicListDao.select().get(MusicService.mPosition).getDuration()));
+        if (MusicService.mPosition != -1) {
+            mMusicDurationTextView.setText(MusicUtils.formatTime(mMusicListDao.select().get(MusicService.mPosition).getDuration()));
+        }
 
         mOnOffButton = findViewById(R.id.music_list_on_off);
         mOnOffButton.setOnClickListener(new View.OnClickListener() {
@@ -243,10 +248,12 @@ public class ListenMusicShowActivity extends AppCompatActivity {
 
     //更新文字
     private void updateTitle() {
-        Music music = mMusicListDao.select().get(MusicService.mPosition);
-        mMusicNameTextView.setText(music.getMusicName().replaceAll(".mp3", ""));
-        mMusicSingerNameTextView.setText("—"+music.getSinger()+"—");
-        mMusicDurationTextView.setText(MusicUtils.formatTime(music.getDuration()));
+        if (MusicService.mPosition != -1) {
+            Music music = mMusicListDao.select().get(MusicService.mPosition);
+            mMusicNameTextView.setText(music.getMusicName().replaceAll(".mp3", ""));
+            mMusicSingerNameTextView.setText("—" + music.getSinger() + "—");
+            mMusicDurationTextView.setText(MusicUtils.formatTime(music.getDuration()));
+        }
     }
 
     //updatelyric

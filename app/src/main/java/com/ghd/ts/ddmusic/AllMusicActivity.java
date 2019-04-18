@@ -139,7 +139,9 @@ public class AllMusicActivity extends SlideBackActivity {
             mSeekBar.setMax(mMusicControl.getDuration());
             mSeekBar.setProgress(mMusicControl.getCurrenPostion());
             updatePlayText();
-            updateTitle();
+            if(MusicService.mPosition != -1){
+                updateTitle();
+            }
         }
 
         @Override

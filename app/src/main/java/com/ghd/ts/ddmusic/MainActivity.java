@@ -222,7 +222,9 @@ public class MainActivity extends AppCompatActivity
             mMusicControl = (MusicService.MusicBinder) binder;
             mService = mMusicControl.getMusicService();
             updatePlayText();
-            updateTitle();
+            if(MusicService.mPosition != -1){
+                updateTitle();
+            }
         }
 
         @Override
@@ -371,10 +373,13 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        int []data = load();
-        mSeekBar.setMax(data[2]);
-        mSeekBar.setProgress(data[1]);
-        MusicService.mPosition = data[0];
+        int[] data = load();
+        if (data[2] != 0) {
+            mSeekBar.setMax(data[2]);
+            mSeekBar.setProgress(data[1]);
+            MusicService.mPosition = data[0];
+        }
+
 //        mMusicControl.seekTo(data[1]);
 
     }
@@ -386,7 +391,9 @@ public class MainActivity extends AppCompatActivity
             mService = mMusicControl.getMusicService();
             handler.sendEmptyMessage(UPDATE_PROGRESS);
             updatePlayText();
-            updateTitle();
+            if(MusicService.mPosition != -1){
+                updateTitle();
+            }
         }
         updateMusicImageViewRotate();
     }
@@ -652,7 +659,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private int[] load() {
-        int[] data = {0,0,0};
+        int[] data = {0, 0, 0};
         FileInputStream in = null;
         BufferedReader reader = null;
         StringBuilder content = new StringBuilder();
@@ -674,10 +681,17 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         }
-        String[] datas = content.toString().split(",");
-        for (int i = 0; i < datas.length; i++) {
-            data[i] = Integer.valueOf(datas[i]);
+        if (!content.equals("")) {
+            String[] datas = content.toString().split(",");
+            for (int i = 0; i < datas.length; i++) {
+                if (datas[i].equals("")) {
+                    data[i] = 0;
+                } else {
+                    data[i] = Integer.valueOf(datas[i]);
+                }
+            }
         }
+
 
         return data;
     }

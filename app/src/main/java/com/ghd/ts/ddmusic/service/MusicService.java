@@ -24,7 +24,7 @@ import java.util.TimerTask;
 public class MusicService extends Service {
 
     private MediaPlayer mPlayer;
-    public static int mPosition;
+    public static int mPosition = -1;
     public static int mPlayStyle = 0; // 默认单曲循环
     private List<Music> mMusicList;
     private Random mRandom;
@@ -154,22 +154,25 @@ public class MusicService extends Service {
         //播放歌曲
         public void play(int position) {
             setPosition(position);
-            mMusic = mMusicList.get(position);
-            setmIsplaying(true);
-            try {
-                mPlayer.reset();
-                mPlayer.setDataSource(mMusicList.get(mPosition).getPath());
-                mPlayer.prepare();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mPlayer.start();
+            if(mPosition != -1){
+                mMusic = mMusicList.get(position);
+                setmIsplaying(true);
+                try {
+                    mPlayer.reset();
+                    mPlayer.setDataSource(mMusicList.get(mPosition).getPath());
+                    mPlayer.prepare();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            });
-            //Log.e("服务", "播放音乐");
+                mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mp) {
+                        mPlayer.start();
+                    }
+                });
+                //Log.e("服务", "播放音乐");
+
+            }
 
         }
 
@@ -196,7 +199,9 @@ public class MusicService extends Service {
 
         //单曲循环
         private void cil_nextMusic() {
-            play(mPosition);
+            if (mPosition != -1){
+                play(mPosition);
+            }
         }
 
         // 随机播放
